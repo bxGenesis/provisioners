@@ -21,15 +21,14 @@ _CommentBegin_
 _CommentEnd_
 
 
-thisGitRoot=$( git rev-parse --show-toplevel 2> /dev/null )
+thisGitRoot=$( cd $(dirname $0); git rev-parse --show-toplevel 2> /dev/null )
 if [ ! -z "${thisGitRoot}" ] ; then
     opLibBase="${thisGitRoot}/lib/bash"
     opBinBase="${thisGitRoot}/bin"    
 
 else
-    # NOTYET, perhaps current location of this seed can be determined and then lib and bin can be relative
-    opLibBase="./lib/bash"
-    opBinBase="./bin"    
+    echo "E: Missing Git Base:: $0 is not in an expected git"
+    exit 1
 fi
 
 alias integer='typeset -i'
