@@ -81,7 +81,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ $( type -t deactivate ) == "function" ] ; then
+    if [ "$( type -t deactivate )" == "function" ] ; then
 	deactivate
     fi
 
@@ -154,4 +154,4 @@ _EOF_
     bx-bases -v 20 --baseDir="${bisosRootDir}" -i pbdUpdate all
 }
 
-bisosBaseDirSetup
+
