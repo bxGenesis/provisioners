@@ -58,8 +58,8 @@ $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Bases Initialization" )
 $( examplesSeperatorSection "Python System Environment Setup (For Virtenv)" )
 ${G_myName} ${extraInfo} -i pythonSysEnvPrepForVirtenvs
-$( examplesSeperatorSection "bxContainer" )
-${G_myName} ${extraInfo} -i bxContainer
+$( examplesSeperatorSection "BISOS BaseDirs Setup" )
+${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 _EOF_
 }
 
@@ -86,20 +86,33 @@ _EOF_
     fi
 
     if which python ; then 
-	lpDo sudo apt-get -y install python-minimal
+	ANT_cooked "Python already install -- Skipped"
     else
-	ANT_here "Python already install -- Skipped"
+	lpDo sudo apt-get -y install python-minimal
     fi
 
     if which pip ; then
-	lpDo sudo apt-get -y install python-pip	
+	ANT_cooked "Pip already install -- Skipped"
     else
-	ANT_here "Pip already install -- Skipped"
+	lpDo sudo apt-get -y install python-pip	
+    fi
+
+    if which python3 ; then 
+	ANT_cooked "Python3 already install -- Skipped"
+    else
+	lpDo sudo apt-get install -y python3.7 
+    fi
+
+    if which pip3 ; then
+	ANT_cooked "Pip3 already install -- Skipped"
+    else
+	lpDo sudo apt-get -y install python3-pip	
     fi
     
     lpDo sudo -H pip install --no-cache-dir --upgrade pip
     lpDo sudo -H pip install --no-cache-dir --upgrade virtualenv
     lpDo sudo -H pip install --no-cache-dir --upgrade bisos.bx-bases
+    lpDo sudo -H pip install --no-cache-dir --upgrade bisos.platform    
 
     lpDo sudo -H pip list
 
@@ -107,7 +120,7 @@ _EOF_
 }
 
 
-function vis_bisosBaseDirSetup {
+function vis_bisosBaseDirsSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 echo someParam and args 
@@ -121,37 +134,40 @@ _EOF_
 # 
 #
 
-    local currentUser=$(id -un)
-    local currentUserGroup=$(id -g -n ${currentUser})
+    #local currentUser=$(id -un)
+    #local currentUserGroup=$(id -g -n ${currentUser})
 
+    local currentUser="bisos"
+    local currentUserGroup="bisos"
+    
     local bisosRootDir="/bisos"
     local bxoRootDir="/bxo"
     local deRunRootDir="/de/run"        
 
+    lpDo sudo bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
+    lpDo sudo bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
 
-    bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
-    bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
-
-    bx-platformInfoManage.py --rootDir_bisos="${bisosRootDir}"  -i pkgInfoParsSet
-    bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
-    bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
+    lpDo sudo bx-platformInfoManage.py --rootDir_bisos="${bisosRootDir}"  -i pkgInfoParsSet
+    lpDo sudo bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
+    lpDo sudo bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
 
     echoAnn "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
-    bx-platformInfoManage.py -i pkgInfoParsGet
+    lpDo bx-platformInfoManage.py -i pkgInfoParsGet
 
-    sudo mkdir -p "${bisosRootDir}"
-    sudo chown -R ${currentUser}:${currentUserGroup} "${bisosRootDir}"
+    lpDo sudo mkdir -p "${bisosRootDir}"
+    lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${bisosRootDir}"
 
-    sudo mkdir -p "${bxoRootDir}"
-    sudo chown -R ${currentUser}:${currentUserGroup} "${bxoRootDir}"
+    lpDo sudo mkdir -p "${bxoRootDir}"
+    lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${bxoRootDir}"
 
-    sudo mkdir -p "${deRunRootDir}"
-    sudo chown -R ${currentUser}:${currentUserGroup} "${deRunRootDir}"
+    lpDo sudo mkdir -p "${deRunRootDir}"
+    lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${deRunRootDir}"
     
     #
     # With the above rootDirs in place, bx-bases need not do any sudo-s
     #
-    bx-bases -v 20 --baseDir="${bisosRootDir}" -i pbdUpdate all
+    lpDo sudo /bin/rm /tmp/NOTYET.log  # NOTYET
+    lpDo sudo -H -u ${currentUser} bx-bases -v 20 --baseDir="${bisosRootDir}" -i pbdUpdate all
 }
 
 
