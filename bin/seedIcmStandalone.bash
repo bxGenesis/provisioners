@@ -823,6 +823,9 @@ function Plus_rightSide {
 
 #PATH=/usr/sbin:/usr/bin:/sbin
 
+[[ ":$PATH:" != *":/usr/local/bin:"* ]] && PATH="/usr/local/bin:${PATH}"
+[[ ":$PATH:" != *":.:"* ]] && PATH=".:${PATH}"
+
 # Get options (defaults immediately below):
 
 badUsage=

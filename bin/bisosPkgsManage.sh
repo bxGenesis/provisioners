@@ -55,14 +55,11 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "BISOS Bootstraping Profiles" )
-$( examplesSeperatorSection "bxDistro" )
-${G_myName} ${extraInfo} -i bxDistro
-$( examplesSeperatorSection "bxContainer" )
-${G_myName} ${extraInfo} -i bxContainer
-$( examplesSeperatorSection "bxVmHostPrepVirts" )
-${G_myName} ${extraInfo} -i bxVmHostPrepVirts kvm
-${G_myName} ${extraInfo} -i bxVmHostPrepVirts kvm virtualbox
+$( examplesSeperatorChapter "BISOS Packages Management" )
+$( examplesSeperatorSection "Python Package Installer" )
+${G_myName} ${extraInfo} -i pyPkgInstall py2-bisos-3 unisos.marme 
+$( examplesSeperatorSection "BISOS BaseDirs Setup" )
+${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 _EOF_
 }
 
@@ -70,8 +67,40 @@ noArgsHook() {
   vis_examples
 }
 
+function echoErr { echo "E: $@" 1>&2; }
+function echoAnn { echo "A: $@" 1>&2; }
+function echoOut { echo "$@"; }
 
-function vis_bxContainer {
+function vis_pyPkgInstall {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local virtEnv="$1"
+    local pkgName="$2"
+
+    
+    if [ "$( type -t deactivate )" == "function" ] ; then
+	echoAnn "Deactivating"
+	deactivate
+    fi
+
+    #bisosRootDir=$( bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
+    #bisosVirtEnvBase="${bisosRootDir}/venv/${bisosVenvName}"
+    
+
+    source ${virtEnv}/bin/activate
+
+    lpDo pip install --no-cache-dir --upgrade "${pkgName}"
+    
+    lpReturn
+}
+
+
+function vis_marme_install {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 echo someParam and args 
@@ -79,64 +108,24 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
+    pkgName=unisos.marme
+    bisosVenvName=py2-bisos-3
 
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+    #########  End-Of-Params-Specification ###########
 
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+    if [ "$( type -t deactivate )" == "function" ] ; then
+	deactivate
+    fi
 
-    lpReturn
+    #PATH="$PATH:."
+
+    if [ ! -d "${bisosVirtEnvBase}" ] ; then
+	bisosBasesDirSetup.sh
+    fi
+
+    bisosRootDir=$( bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
+    bisosVirtEnvBase="${bisosRootDir}/venv/${bisosVenvName}"
+
+    lpDo vis_pyPkgInstall "${bisosVirtEnvBase}" ${pkgName}
 }
-
-
-function vis_bxDistro {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    ANT_raw "Nothing Has Been Added To The Distro"
-
-    lpReturn
-}
-
-
-function vis_bxVmHostPrepVirts {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
-_EOF_
-    }
-    EH_assert [[ $# -gt 0 ]]
-
-    local inputsList="$@"
-    local each=""
-    local thisFunc=${G_thisFunc}
-
-    function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local virtProvider=$1
-	case ${virtProvider} in
-	    kvm)
-		EH_problem "KVM notyet"
-		;;
-	    virtualbox)
-		EH_problem "VirtualBox notyet"		
-		;;
-	    vmware)
-		EH_problem "Vmware notyet"				
-		;;
-	    *)
-		EH_problem "Unknown ${virtProvider} notyet"
-		;;
-	esac
-    }
     
-    for each in ${inputsList} ; do
-	lpDo processEach ${each}
-    done
-    
-    lpReturn
-}
