@@ -137,8 +137,8 @@ _EOF_
     local passwdPolicy=$1
 
     local userAcctName="bystar"
-    local userAcctGroup="bystar"
-    local userAcctSupplementryGroups="bisos"        
+    local userAcctGroup="bisos"
+    #local userAcctSupplementryGroups=""        
     local userAcctPasswd=""    
 
     if vis_userAcctsExist ${userAcctName} ; then
@@ -150,8 +150,9 @@ _EOF_
 
     lpDo useradd \
 	 --comment "ByStar User Acct" \
-	 --groups "${userAcctSupplementryGroups}" \
+	 --gid "${userAcctGroup}" \
 	 --shell /bin/bash \
+	 --create-home \
 	 ${userAcctName}
 
     lpDo eval "echo ${userAcctName}:${userAcctPasswd} | sudo -S /usr/sbin/chpasswd"    
@@ -166,7 +167,7 @@ _EOF_
     
     lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
 
-    vis_userAcctsReport ${userAcctName} 
+    lpDo vis_userAcctsReport ${userAcctName} 
 
     lpReturn
 }
@@ -211,8 +212,10 @@ _EOF_
 	 --shell /usr/sbin/nologin \
 	 --comment "ByStar Internet Services OS" \
 	 ${userAcctName}
+
+    lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
     
-    vis_userAcctsReport ${userAcctName} 
+    lpDo vis_userAcctsReport ${userAcctName} 
     
     lpReturn
 }
@@ -385,5 +388,3 @@ _EOF_
 
     lpReturn 
 }
-
-

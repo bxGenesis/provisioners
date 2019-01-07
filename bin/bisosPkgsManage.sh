@@ -57,9 +57,11 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Packages Management" )
 $( examplesSeperatorSection "Python Package Installer" )
+${G_myName} ${extraInfo} -p runAs=bisos -i pyPkgInstall py2-bisos-3 unisos.marme 
 ${G_myName} ${extraInfo} -i pyPkgInstall py2-bisos-3 unisos.marme 
 $( examplesSeperatorSection "BISOS BaseDirs Setup" )
-${G_myName} ${extraInfo} -i bisosBaseDirsSetup
+${G_myName} ${extraInfo} -i marme_install
+${G_myName} ${extraInfo} -p runAs=bisos -i marme_install
 _EOF_
 }
 
@@ -82,20 +84,54 @@ _EOF_
     local virtEnv="$1"
     local pkgName="$2"
 
+    local activateFile=""
+
+    local thisUmask="0002"
+
+    if [ "${runAs}" == "" ] ; then
+       runAs=$(id -un)
+    fi
+
     
     if [ "$( type -t deactivate )" == "function" ] ; then
 	echoAnn "Deactivating"
 	deactivate
     fi
 
-    #bisosRootDir=$( bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
-    #bisosVirtEnvBase="${bisosRootDir}/venv/${bisosVenvName}"
-    
+    if [ -d "${virtEnv}" ] ; then
+	activateFile=${virtEnv}/bin/activate
+    else
+	local bisosRootDir=$( bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
+	local bisosVirtEnvBase="${bisosRootDir}/venv/${virtEnv}"
+	if [ -d "${bisosVirtEnvBase}" ] ; then
+	    activateFile=${bisosVirtEnvBase}/bin/activate
+	else
+	    EH_problem "Missing  ${bisosVirtEnvBase}"
+	    lpReturn
+	fi
+    fi
 
-    source ${virtEnv}/bin/activate
+    if [ ! -f "${activateFile}" ] ; then
+	EH_problem "Missing  ${activateFile}"
+	lpReturn
+    fi
 
-    lpDo pip install --no-cache-dir --upgrade "${pkgName}"
+    ANT_raw "Running as ${runAs} with umask=${thisUmask}"
+
+    sudo -H -u ${runAs} bash << _EOF_
+    umask ${thisUmask}
+
+    source ${activateFile}
+
+    set -x
+
+    pip -V    
+
+    pip install --no-cache-dir --upgrade "${pkgName}"
     
+    pip list
+_EOF_
+
     lpReturn
 }
 
@@ -108,24 +144,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    pkgName=unisos.marme
-    bisosVenvName=py2-bisos-3
+    local pkgName=unisos.marme
+    local bisosVenvName=py2-bisos-3
 
-    #########  End-Of-Params-Specification ###########
-
-    if [ "$( type -t deactivate )" == "function" ] ; then
-	deactivate
-    fi
-
-    #PATH="$PATH:."
-
-    if [ ! -d "${bisosVirtEnvBase}" ] ; then
-	bisosBasesDirSetup.sh
-    fi
-
-    bisosRootDir=$( bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
-    bisosVirtEnvBase="${bisosRootDir}/venv/${bisosVenvName}"
-
-    lpDo vis_pyPkgInstall "${bisosVirtEnvBase}" ${pkgName}
+    lpDo vis_pyPkgInstall "${bisosVenvName}" ${pkgName}
 }
     
