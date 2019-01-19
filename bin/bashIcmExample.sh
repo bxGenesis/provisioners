@@ -2,31 +2,40 @@
 
 IcmBriefDescription="NOTYET: Short Description Of The Module"
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/mainRepoRootDetermine.bash"
+####+BEGINNOT: bx:dblock:global:file-insert :file "/opt/idaas/gitRepos/idaas/idaas/tools/common/lib/bash/mainRepoRootDetermine.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
-# ../lib/bash/mainRepoRootDetermine.bash common dblock inserted code
+# /opt/idaas/gitRepos/idaas/idaas/tools/common/lib/bash/mainRepoRootDetermine.bash common dblock inserted code
 #
-mainRepoRoot=$( cd $(dirname $0); git rev-parse --show-toplevel 2> /dev/null )
-if [ -z "${mainRepoRoot}" ] ; then
-    echo "E: Missing Git Base:: $0 is not in an expected git"
-    exit 1
+gitTopLevelOffset="ci-actions"   # Specified as a dblock parameter
+specifiedIcmPkgRunBase="/opt/idaas/gitRepos/idaas/ci-actions" # Specified as a dblock parameter
+scriptSrcRunBase="$( dirname ${BASH_SOURCE[0]} )"
+icmPkgRunBase=$(readlink -f ${scriptSrcRunBase}/..)  # Assuming Packaged ICM in bin
+icmSeedFile="${icmPkgRunBase}/bin/seedIcmStandalone.bash"
+
+if [ ! -f "${icmSeedFile}" ] ; then
+    #echo "Assuming Detatched ICM Inside Of A Git Repo"
+    mainRepoRoot=$( cd ${scriptSrcRunBase} ;  git rev-parse --show-toplevel 2> /dev/null )
+    if [ ! -z "${mainRepoRoot}" ] ; then
+	icmSeedFile="${mainRepoRoot}/${gitTopLevelOffset}/bin/seedIcmStandalone.bash"
+	if [ -f "${icmSeedFile}" ] ; then 	
+	    icmSeedFile="${icmSeedFile}"  # opDoNothing
+	fi
+    else
+	icmPkgRunBase="${specifiedIcmPkgRunBase}"
+	icmSeedFile="${icmPkgRunBase}/bin/seedIcmStandalone.bash"
+	if [ ! -f "${icmSeedFile}" ] ; then 
+	    echo "E: Missing ${icmSeedFile} -- Misconfigured icmPkgRunBase"
+	    exit 1
+	fi
+    fi
 fi
-
-####+END:
-
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/seedIcmLoad.bash"
-#
-# DO NOT EDIT THIS SECTION (dblock)
-# ../lib/bash/seedIcmLoad.bash common dblock inserted code
-#
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmStandalone.bash" -l $0 "$@" 
+    "${icmSeedFile}" -l $0 "$@" 
     exit $?
 fi
 
 ####+END:
-
 
 function vis_describe {  cat  << _EOF_
 Module description comes here.
