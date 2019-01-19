@@ -7,6 +7,7 @@ IcmBriefDescription="NOTYET: Short Description Of The Module"
 # DO NOT EDIT THIS SECTION (dblock)
 # /opt/idaas/gitRepos/idaas/idaas/tools/common/lib/bash/mainRepoRootDetermine.bash common dblock inserted code
 #
+
 gitTopLevelOffset="ci-actions"   # Specified as a dblock parameter
 specifiedIcmPkgRunBase="/opt/idaas/gitRepos/idaas/ci-actions" # Specified as a dblock parameter
 scriptSrcRunBase="$( dirname ${BASH_SOURCE[0]} )"
@@ -36,6 +37,9 @@ if [ "${loadFiles}" == "" ] ; then
 fi
 
 ####+END:
+
+#mainRepoRoot=$( cd $(dirname $0); git rev-parse --show-toplevel 2> /dev/null )
+
 
 function vis_describe {  cat  << _EOF_
 Module description comes here.

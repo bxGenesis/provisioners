@@ -21,44 +21,15 @@ _CommentBegin_
 _CommentEnd_
 
 
-#
-# NOTYET, Location of lib can be made more flexible
-#
+thisGitRoot=$( cd $(dirname $0); git rev-parse --show-toplevel 2> /dev/null )
+if [ ! -z "${thisGitRoot}" ] ; then
+    opLibBase="${thisGitRoot}/lib/bash"
+    opBinBase="${thisGitRoot}/bin"    
 
-scriptSrcRunBase="$( dirname ${BASH_SOURCE[0]} )"
-icmPkgRunBase=$(readlink -f ${scriptSrcRunBase}/..)
-icmPkgRunLibBashBase="${icmPkgRunBase}/lib/bash"
-
-if [ ! -d ${icmPkgRunLibBashBase} ] ; then 
-    echo "E: ${icmPkgRunLibBashBase}"
+else
+    echo "E: Missing Git Base:: $0 is not in an expected git"
     exit 1
 fi
-
-
-# #
-# # NOTYET, Location of lib can be made more flexible
-# #
-
-# scriptSrcRunBase="$( dirname ${BASH_SOURCE[0]} )"
-# icmPkgRunBase=$(readlink -f ${scriptSrcRunBase}/..)
-# icmPkgRunLibBashBase="${icmPkgRunBase}/lib/bash"
-
-# if [ ! -d ${icmPkgRunLibBashBase} ] ; then 
-#     echo "E: ${icmPkgRunLibBashBase}"
-#     exit 1
-# fi
-
-# opLibBase="${icmPkgRunLibBashBase}"
-# opCfgBase="${icmPkgRunBase}/cgf"
-# opBinBase="${icmPkgRunBase}/bin"
-
-opLibBase="${icmPkgRunLibBashBase}"
-opBinBase="${icmPkgRunBase}/bin"
-
-#echo ${opLibBase}
-
-# thisGitRoot=$( git rev-parse --show-toplevel 2> /dev/null )
-
 
 alias integer='typeset -i'
 alias OrderedArray='typeset -a'
