@@ -7,17 +7,28 @@ IcmBriefDescription="NOTYET: Short Description Of The Module"
 # DO NOT EDIT THIS SECTION (dblock)
 # /opt/idaas/gitRepos/idaas/idaas/tools/common/lib/bash/mainRepoRootDetermine.bash common dblock inserted code
 #
+
+gitTopLevelOffset="ci-actions"   # Specified as a dblock parameter
+specifiedIcmPkgRunBase="/opt/idaas/gitRepos/idaas/ci-actions" # Specified as a dblock parameter
 scriptSrcRunBase="$( dirname ${BASH_SOURCE[0]} )"
-icmPkgRunBase=$(readlink -f ${scriptSrcRunBase}/..)
+icmPkgRunBase=$(readlink -f ${scriptSrcRunBase}/..)  # Assuming Packaged ICM in bin
 icmSeedFile="${icmPkgRunBase}/bin/seedIcmStandalone.bash"
 
 if [ ! -f "${icmSeedFile}" ] ; then
-    #echo "Assuming Detatched ICM"
-    icmPkgRunBase="/opt/idaas/gitRepos/idaas/ci-actions"
-    icmSeedFile="${icmPkgRunBase}/bin/seedIcmStandalone.bash"
-    if [ ! -f "${icmSeedFile}" ] ; then 
-	echo "E: Missing ${icmSeedFile} -- Misconfigured icmPkgRunBase"
-	exit 1
+    #echo "Assuming Detatched ICM Inside Of A Git Repo"
+    mainRepoRoot=$( cd ${scriptSrcRunBase} ;  git rev-parse --show-toplevel 2> /dev/null )
+    if [ ! -z "${mainRepoRoot}" ] ; then
+	icmSeedFile="${mainRepoRoot}/${gitTopLevelOffset}/bin/seedIcmStandalone.bash"
+	if [ -f "${icmSeedFile}" ] ; then 	
+	    icmSeedFile="${icmSeedFile}"  # opDoNothing
+	fi
+    else
+	icmPkgRunBase="${specifiedIcmPkgRunBase}"
+	icmSeedFile="${icmPkgRunBase}/bin/seedIcmStandalone.bash"
+	if [ ! -f "${icmSeedFile}" ] ; then 
+	    echo "E: Missing ${icmSeedFile} -- Misconfigured icmPkgRunBase"
+	    exit 1
+	fi
     fi
 fi
 if [ "${loadFiles}" == "" ] ; then
