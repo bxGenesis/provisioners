@@ -61,12 +61,11 @@ _CommentEnd_
 function vis_describe {  cat  << _EOF_
 Assumes that bisos account exists.
 
-- SysInstalls python 2,3 and pip 2,3
-- pip installs virtenv2/3
-- creates /opt/bisosProvisioners/venv/py2,3
-- pip installs bisos.bases
+./bisosAccounts.sh              :: has created bisos account
+./bisosSysPythonSetup.sh        :: has sys installed python and pip
+./bisosProvisionersVenvSetup.sh :: has created the venv and has installed bisos.bases 
 
-===== The above can be a separate module called  bisosProvVenvSetup.sh ===
+Based on these we now:
 
 - Creates /bisos, /de,
 - Runs bisos.bases and creates everything and symlinks
@@ -85,6 +84,7 @@ _EOF_
 # # /opt/public/osmt/lib/portLib.sh
 . ${opLibBase}/portLib.sh
 
+. ./sharedParameters_lib.sh
 
 function G_postParamHook {
      return 0
@@ -113,12 +113,7 @@ noArgsHook() {
 }
 
 
-function echoErr { echo "E: $@" 1>&2; }
-function echoAnn { echo "A: $@" 1>&2; }
-function echoOut { echo "$@"; }
-
-
-function vis_pythonSysEnvPrepForVirtenvs {
+function toBeAbsorbed {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 echo someParam and args 
@@ -130,38 +125,6 @@ _EOF_
 	deactivate
     fi
 
-    if which python ; then 
-	ANT_cooked "Python already install -- Skipped"
-    else
-	lpDo sudo apt-get -y install python-minimal
-    fi
-
-    if which pip ; then
-	ANT_cooked "Pip already install -- Skipped"
-    else
-	lpDo sudo apt-get -y install python-pip	
-    fi
-
-    if which python3 ; then 
-	ANT_cooked "Python3 already install -- Skipped"
-    else
-	lpDo sudo apt-get install -y python3.7 
-    fi
-
-    if which pip3 ; then
-	ANT_cooked "Pip3 already install -- Skipped"
-    else
-	lpDo sudo apt-get -y install python3-pip	
-    fi
-    
-    lpDo sudo -H pip install --no-cache-dir --upgrade pip
-    lpDo sudo -H pip install --no-cache-dir --upgrade virtualenv
-    lpDo sudo -H pip install --no-cache-dir --upgrade bisos.bx-bases
-    lpDo sudo -H pip install --no-cache-dir --upgrade bisos.platform    
-
-    lpDo sudo -H pip list
-
-    lpReturn
 }
 
 
@@ -174,10 +137,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
 
-#
-# Running user should have sudo privileges
-# 
-#
+    #
+    # Running user should have sudo privileges
+    # 
+    #
+
+    local py2ActivateFile="${venvBasePy2}/bin/activate"
+
+    source ${py2ActivateFile}
+    
 
     #local currentUser=$(id -un)
     #local currentUserGroup=$(id -g -n ${currentUser})
@@ -189,14 +157,14 @@ _EOF_
     local bxoRootDir="/bxo"
     local deRunRootDir="/de/run"        
 
-    lpDo sudo bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
-    lpDo sudo bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
+    lpDo bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
+    lpDo bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
 
-    lpDo sudo bx-platformInfoManage.py --rootDir_bisos="${bisosRootDir}"  -i pkgInfoParsSet
-    lpDo sudo bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
-    lpDo sudo bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
+    lpDo bx-platformInfoManage.py --rootDir_bisos="${bisosRootDir}"  -i pkgInfoParsSet
+    lpDo bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
+    lpDo bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
 
-    echoAnn "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
+    ANT_raw "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
     lpDo bx-platformInfoManage.py -i pkgInfoParsGet
 
     lpDo sudo mkdir -p "${bisosRootDir}"
@@ -212,8 +180,27 @@ _EOF_
     # With the above rootDirs in place, bx-bases need not do any sudo-s
     #
     lpDo sudo /bin/rm /tmp/NOTYET.log  # NOTYET
-    lpDo sudo -H -u ${currentUser} bx-bases -v 20 --baseDir="${bisosRootDir}" -i pbdUpdate all
+    lpDo sudo -H -u ${currentUser} ${G_myFullName} -h -v -n showRun -i bxBasesUpdateAll "${bisosRootDir}"
 }
+
+
+function vis_bxBasesUpdateAll {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local bisosRootDir=$1
+
+    local py2ActivateFile="${venvBasePy2}/bin/activate"
+
+    source ${py2ActivateFile}
+    
+    lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" -i pbdUpdate all
+}
+
 
 
 _CommentBegin_
@@ -229,10 +216,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_unsupportedPlatform_p
+    if vis_unsupportedPlatform_p ; then
        EH_problem "Unsupported Platform"
        lpReturn 101
-
+    fi
+       
     opDo vis_sysInstall_python3
 
     # vis_sysInstall_python2
