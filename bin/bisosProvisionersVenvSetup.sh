@@ -45,6 +45,12 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Xrefs         :: *[Related/Xrefs:]*  <<Xref-Here->>  -- External Documents  [[elisp:(org-cycle)][| ]]
 **  [[elisp:(org-cycle)][| ]]  Panel        :: [[file:/libre/ByStar/InitialTemplates/activeDocs/bxServices/versionControl/fullUsagePanel-en.org::Xref-VersionControl][Panel Roadmap Documentation]] [[elisp:(org-cycle)][| ]]
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
+Assumes that bisos account exists.
+Assumes that python and pip and virtualenv are in place
+
+- creates /opt/bisosProvisioners/venv/py2,3
+- activates venv
+- pip installs bisos.bases
 
 _EOF_
 }
@@ -57,26 +63,6 @@ _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  Imports       :: Prefaces (Imports/Libraries) [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
-
-function vis_describe {  cat  << _EOF_
-Assumes that bisos account exists.
-
-- SysInstalls python 2,3 and pip 2,3
-- pip installs virtenv2/3
-- creates /opt/bisosProvisioners/venv/py2,3
-- pip installs bisos.bases
-
-===== The above can be a separate module called  bisosProvVenvSetup.sh ===
-
-- Creates /bisos, /de,
-- Runs bisos.bases and creates everything and symlinks
-
-===== Sets Up Platform as needed ======
-- Builds and installs emacs
-- Brings platform to minimum bisos level
-
-_EOF_
-		      }
 
 # Import Libraries
 
@@ -104,7 +90,8 @@ $( examplesSeperatorChapter "BISOS Bases Initialization" )
 $( examplesSeperatorSection "Python System Environment Setup (For Virtenv)" )
 ${G_myName} ${extraInfo} -i pythonSysEnvPrepForVirtenvs
 $( examplesSeperatorSection "BISOS BaseDirs Setup" )
-${G_myName} ${extraInfo} -i bisosBaseDirsSetup
+${G_myName} ${extraInfo} -i virtenvsPrep
+${G_myName} ${extraInfo} -i venvPipInstalls
 _EOF_
 }
 
@@ -112,13 +99,14 @@ noArgsHook() {
   vis_examples
 }
 
+proisionersBaseDir="/opt/bisosProvisioner}"
 
-function echoErr { echo "E: $@" 1>&2; }
-function echoAnn { echo "A: $@" 1>&2; }
-function echoOut { echo "$@"; }
+venvBasePy2="${proisionersBaseDir}/venv/py2"
+venvBasePy3="${proisionersBaseDir}/venv/py3"    
 
 
-function vis_pythonSysEnvPrepForVirtenvs {
+
+function vis_virtenvsPrep {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 echo someParam and args 
@@ -126,93 +114,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if [ "$( type -t deactivate )" == "function" ] ; then
-	deactivate
-    fi
 
-    if which python ; then 
-	ANT_cooked "Python already install -- Skipped"
-    else
-	lpDo sudo apt-get -y install python-minimal
-    fi
+    lpDo virtualenv --python=python3 ${venvBasePy3}
 
-    if which pip ; then
-	ANT_cooked "Pip already install -- Skipped"
-    else
-	lpDo sudo apt-get -y install python-pip	
-    fi
-
-    if which python3 ; then 
-	ANT_cooked "Python3 already install -- Skipped"
-    else
-	lpDo sudo apt-get install -y python3.7 
-    fi
-
-    if which pip3 ; then
-	ANT_cooked "Pip3 already install -- Skipped"
-    else
-	lpDo sudo apt-get -y install python3-pip	
-    fi
+    lpDo virtualenv --python=python2 ${venvBasePy2}    
     
-    lpDo sudo -H pip install --no-cache-dir --upgrade pip
-    lpDo sudo -H pip install --no-cache-dir --upgrade virtualenv
-    lpDo sudo -H pip install --no-cache-dir --upgrade bisos.bx-bases
-    lpDo sudo -H pip install --no-cache-dir --upgrade bisos.platform    
-
-    lpDo sudo -H pip list
-
     lpReturn
-}
-
-
-function vis_bisosBaseDirsSetup {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-
-#
-# Running user should have sudo privileges
-# 
-#
-
-    #local currentUser=$(id -un)
-    #local currentUserGroup=$(id -g -n ${currentUser})
-
-    local currentUser="bisos"
-    local currentUserGroup="bisos"
-    
-    local bisosRootDir="/bisos"
-    local bxoRootDir="/bxo"
-    local deRunRootDir="/de/run"        
-
-    lpDo sudo bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
-    lpDo sudo bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
-
-    lpDo sudo bx-platformInfoManage.py --rootDir_bisos="${bisosRootDir}"  -i pkgInfoParsSet
-    lpDo sudo bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
-    lpDo sudo bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
-
-    echoAnn "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
-    lpDo bx-platformInfoManage.py -i pkgInfoParsGet
-
-    lpDo sudo mkdir -p "${bisosRootDir}"
-    lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${bisosRootDir}"
-
-    lpDo sudo mkdir -p "${bxoRootDir}"
-    lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${bxoRootDir}"
-
-    lpDo sudo mkdir -p "${deRunRootDir}"
-    lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${deRunRootDir}"
-    
-    #
-    # With the above rootDirs in place, bx-bases need not do any sudo-s
-    #
-    lpDo sudo /bin/rm /tmp/NOTYET.log  # NOTYET
-    lpDo sudo -H -u ${currentUser} bx-bases -v 20 --baseDir="${bisosRootDir}" -i pbdUpdate all
 }
 
 
@@ -221,7 +128,7 @@ _CommentBegin_
 _CommentEnd_
 
 
-function vis_pythonsPipsPrep {
+function vis_venvPipInstalls {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Make sure python2 and python3 and their pips are in place
@@ -229,31 +136,19 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if vis_unsupportedPlatform_p
-       EH_problem "Unsupported Platform"
-       lpReturn 101
 
-    opDo vis_sysInstall_python3
+    local py2ActivateFile="${venvBasePy2}/bin/activate"
 
-    # vis_sysInstall_python2
+    source ${py2ActivateFile}
+    
+    lpDo pip install bisos.bx-bases
 
-    # vis_sysInstall_pip3
+    lpDo pip install bisos.platform
 
-    # vis_sysInstall_pip2
+    which -a bx-platformInfoManage.py
 
-    # vis_sysInstall_bisos_bxBases
-
-    # sudo apt -y install python2
-
-    # cd /tmp; curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
-    # sudo python2 /tmp/get-pip.py
-
-    # sudo -H pip2 install --no-cache-dir --upgrade bisos.bx-bases
-
-    #sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
-
-    # which -a bx-platformInfoManage.py
-
+    lpDo pip list 
+    
     # touch /tmp/NOTYET.log
 
     # sudo bx-platformInfoManage.py -v 20  -i pkgInfoParsDefaultsSet bxoPolicy /
@@ -373,101 +268,28 @@ _EOF_
 
     # cd /tmp; curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
     # sudo python2 /tmp/get-pip.py
-
+    lpDo sudo -H pip2 install --no-cache-dir --upgrade pip2
+    
     lpReturn
 }	
 
 
-
 _CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysInstall_bisos_bxBases   [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysInstall_pip3   [[elisp:(org-cycle)][| ]]
 _CommentEnd_
 
 
-function vis_sysInstall_bisos_bxBases {
+function vis_sysInstal_virtualenv3 {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    # sudo -H pip2 install --no-cache-dir --upgrade bisos.bx-bases
-
-    #sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
-
-    # which -a bx-platformInfoManage.py
+    lpDo sudo -H pip3 install --no-cache-dir --upgrade virtualenv    
 
     lpReturn
 }	
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_bisos_setPlatformPolicy   [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_bisos_setPlatformPolicy {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    # sudo -H pip2 install --no-cache-dir --upgrade bisos.bx-bases
-
-    #sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
-
-    # which -a bx-platformInfoManage.py
-
-    lpReturn
-}	
-
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_bisos_acctsUpdate   [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_bisos_acctsUpdate {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    # sudo -H pip2 install --no-cache-dir --upgrade bisos.bx-bases
-
-    #sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
-
-    # which -a bx-platformInfoManage.py
-
-    lpReturn
-}	
-
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_bisos_basesUpdate   [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_bisos_basesUpdate {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    # sudo -H pip2 install --no-cache-dir --upgrade bisos.bx-bases
-
-    #sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
-
-    # which -a bx-platformInfoManage.py
-
-    lpReturn
-}	
-
 
 
 
