@@ -1,7 +1,10 @@
 #!/bin/bash
 
+#
+# This file is sourced by related bisosProvisioner scripts.
+#
 
-provisionersBaseDir="/opt/bisosProvisioner}"
+provisionersBaseDir="/opt/bisosProvisioner"
 
 venvBasePy2="${provisionersBaseDir}/venv/py2"
 venvBasePy3="${provisionersBaseDir}/venv/py3"    

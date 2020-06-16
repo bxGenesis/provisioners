@@ -40,6 +40,7 @@ _EOF_
 . ${opLibBase}/portLib.sh
 
 . ${opBinBase}/sharedParameters_lib.sh
+. ${opBinBase}/bisosProvisioners_lib.sh
 
 function G_postParamHook {
      return 0
@@ -70,6 +71,7 @@ ${G_myName} ${extraInfo} -i bxDistro
 $( examplesSeperatorSection "bxContainer" )
 ${G_myName} ${extraInfo} -i bxContainer
 _EOF_
+  vis_provisionersExamples "${extraInfo}"
 }
 
 noArgsHook() {
