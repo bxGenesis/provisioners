@@ -81,31 +81,15 @@ noArgsHook() {
 function vis_gitPrepAuth {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Git Auth clone/update and activate.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
+    lpDo vis_gitEnableAuth
 
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
-
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
-
-    lpReturn
-}
-
-function vis_gitPrepAnon {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
-    local gitReposBase="${selfcontainedBase}/gitRepos"    
-
+    lpDo vis_gitActivateAuth    
+    
     lpReturn
 }
 
@@ -114,17 +98,53 @@ _EOF_
 function vis_gitEnableAuth {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+If needed, git auth clone.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
     local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
     local gitReposAuthBase="${selfcontainedBase}/gitReposAuth"
+    local thisRepoDir="${gitReposAuthBase}/provisioners"
 
     lpDo mkdir -p "${gitReposAuthBase}"
 
-    inBaseDirDo "${gitReposAuthBase}" git clone git@github.com:bxGenesis/provisioners.git
+    if [ -d "${thisRepoDir}" ] ; then
+	ANT_raw "${thisRepoDir} exists -- git clone skipped"
+    else
+	inBaseDirDo "${gitReposAuthBase}" git clone git@github.com:bxGenesis/provisioners.git
+    fi
+
+    lpReturn
+}
+
+function vis_gitActivateAuth {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Update the symlink from gitRepos to point to gitReposAuth.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    local gitReposAuthBase="${selfcontainedBase}/gitReposAuth"
+    local gitReposBase="${selfcontainedBase}/gitRepos"    
+
+    opDo FN_fileSymlinkUpdate "${gitReposAuthBase}/provisioners" "${gitReposBase}/provisioners" 
+
+    lpReturn
+}
+
+
+function vis_gitPrepAnon {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Git Auth clone/update and activate.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_gitActivateAnon    
 
     lpReturn
 }
@@ -133,16 +153,17 @@ _EOF_
 function vis_gitActivateAnon {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Update the symlink from gitRepos to point to gitReposAnon.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
+    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    local gitReposAnonBase="${selfcontainedBase}/gitReposAnon"
+    local gitReposBase="${selfcontainedBase}/gitRepos"    
 
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
-
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+    opDo FN_fileSymlinkUpdate "${gitReposAnonBase}/provisioners" "${gitReposBase}/provisioners" 
+    
 
     lpReturn
 }
