@@ -312,7 +312,7 @@ FN_fileSymlinkUpdate() {
       printf "$2 already a symlink, removing it\n"
       ls -l $2 1>&2
       /bin/rm $2
-      printf "running: ln -s $1 $2 "
+      printf "running: ln -s $1 $2\n"
       ln -s $1 $2
     elif test -a $2 ; then
       # The target should not have existed before

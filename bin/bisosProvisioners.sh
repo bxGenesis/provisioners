@@ -56,6 +56,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "Git Enable, Activate, Prep" )
+${G_myName} ${extraInfo} -i gitReposReport
 $( examplesSeperatorSection "Git Auth (Development) Setups" )
 ${G_myName} ${extraInfo} -i gitPrepAuth
 ${G_myName} ${extraInfo} -i gitActivateAuth
@@ -68,15 +69,30 @@ $( examplesSeperatorSection "bxDistro" )
 ${G_myName} ${extraInfo} -i bxDistro
 $( examplesSeperatorSection "bxContainer" )
 ${G_myName} ${extraInfo} -i bxContainer
-$( examplesSeperatorSection "bxVmHostPrepVirts" )
-${G_myName} ${extraInfo} -i bxVmHostPrepVirts kvm
-${G_myName} ${extraInfo} -i bxVmHostPrepVirts kvm virtualbox
 _EOF_
 }
 
 noArgsHook() {
   vis_examples
 }
+
+
+function vis_gitReposReport {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+If needed, git auth clone.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    local gitReposBase="${selfcontainedBase}/gitRepos"    
+
+    lpDo ls -l "${gitReposBase}"/*
+    
+    lpReturn
+}
+
 
 function vis_gitPrepAuth {
     G_funcEntry
@@ -92,7 +108,6 @@ _EOF_
     
     lpReturn
 }
-
 
 
 function vis_gitEnableAuth {
@@ -163,7 +178,6 @@ _EOF_
     local gitReposBase="${selfcontainedBase}/gitRepos"    
 
     opDo FN_fileSymlinkUpdate "${gitReposAnonBase}/provisioners" "${gitReposBase}/provisioners" 
-    
 
     lpReturn
 }
@@ -177,11 +191,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
+    # lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
 
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+    # lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
 
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+    # lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
 
     lpReturn
 }
@@ -200,41 +214,3 @@ _EOF_
     lpReturn
 }
 
-
-function vis_bxVmHostPrepVirts {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
-_EOF_
-    }
-    EH_assert [[ $# -gt 0 ]]
-
-    local inputsList="$@"
-    local each=""
-    local thisFunc=${G_thisFunc}
-
-    function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local virtProvider=$1
-	case ${virtProvider} in
-	    kvm)
-		EH_problem "KVM notyet"
-		;;
-	    virtualbox)
-		EH_problem "VirtualBox notyet"		
-		;;
-	    vmware)
-		EH_problem "Vmware notyet"				
-		;;
-	    *)
-		EH_problem "Unknown ${virtProvider} notyet"
-		;;
-	esac
-    }
-    
-    for each in ${inputsList} ; do
-	lpDo processEach ${each}
-    done
-    
-    lpReturn
-}
