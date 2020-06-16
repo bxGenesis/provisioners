@@ -103,11 +103,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
-
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
-
-    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    local gitReposBase="${selfcontainedBase}/gitRepos"    
 
     lpReturn
 }
@@ -123,14 +120,11 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
-
     local gitReposAuthBase="${selfcontainedBase}/gitReposAuth"
-    local gitReposBase="${selfcontainedBase}/gitRepos"    
-    
 
-    #echo ${selfcontainedBase}
+    lpDo mkdir -p "${gitReposAuthBase}"
 
-    
+    inBaseDirDo "${gitReposAuthBase}" git clone git@github.com:bxGenesis/provisioners.git
 
     lpReturn
 }
