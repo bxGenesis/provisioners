@@ -1,8 +1,22 @@
 #!/bin/bash
 
 
-proisionersBaseDir="/opt/bisosProvisioner}"
+provisionersBaseDir="/opt/bisosProvisioner}"
 
-venvBasePy2="${proisionersBaseDir}/venv/py2"
-venvBasePy3="${proisionersBaseDir}/venv/py3"    
+venvBasePy2="${provisionersBaseDir}/venv/py2"
+venvBasePy3="${provisionersBaseDir}/venv/py3"    
 
+function vis_basedOnGitDetermineThisSelfcontainedBase {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    #
+    # seed sets up thisGitRoot=$( cd $(dirname $0); git rev-parse --show-toplevel 2> /dev/null )
+    #
+
+    inBaseDirDo ${thisGitRoot}/../.. pwd
+}

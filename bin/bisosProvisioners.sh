@@ -2,7 +2,7 @@
 
 IcmBriefDescription="NOTYET: Short Description Of The Module"
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/mainRepoRootDetermine.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/mainRepoRootDetermine.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/mainRepoRootDetermine.bash common dblock inserted code
@@ -15,13 +15,13 @@ fi
 
 ####+END:
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/seedIcmLoad.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/seedIcmLoad.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/seedIcmLoad.bash common dblock inserted code
 #
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmStandalone.bash" -l $0 "$@" 
+    "${mainRepoRoot}/bin/seedIcmSelfcontained.bash" -l $0 "$@" 
     exit $?
 fi
 
@@ -37,9 +37,9 @@ _EOF_
 
 #
 . ${opLibBase}/pidLib.sh
-# # /opt/public/osmt/lib/portLib.sh
 . ${opLibBase}/portLib.sh
 
+. ${opBinBase}/sharedParameters_lib.sh
 
 function G_postParamHook {
      return 0
@@ -55,6 +55,14 @@ function vis_examples {
     visLibExamplesOutput ${G_myName} 
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
+$( examplesSeperatorChapter "Git Enable, Activate, Prep" )
+$( examplesSeperatorSection "Git Auth (Development) Setups" )
+${G_myName} ${extraInfo} -i gitPrepAuth
+${G_myName} ${extraInfo} -i gitActivateAuth
+${G_myName} ${extraInfo} -i gitEnableAuth
+$( examplesSeperatorSection "Git Anon (Released) Setups" )
+${G_myName} ${extraInfo} -i gitPrepAnon
+${G_myName} ${extraInfo} -i gitActivateAnon
 $( examplesSeperatorChapter "BISOS Bootstraping Profiles" )
 $( examplesSeperatorSection "bxDistro" )
 ${G_myName} ${extraInfo} -i bxDistro
@@ -68,6 +76,81 @@ _EOF_
 
 noArgsHook() {
   vis_examples
+}
+
+function vis_gitPrepAuth {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
+
+    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+
+    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+
+    lpReturn
+}
+
+function vis_gitPrepAnon {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
+
+    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+
+    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+
+    lpReturn
+}
+
+
+
+function vis_gitEnableAuth {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+
+    local gitReposAuthBase="${selfcontainedBase}/gitReposAuth"
+    local gitReposBase="${selfcontainedBase}/gitRepos"    
+    
+
+    #echo ${selfcontainedBase}
+
+    
+
+    lpReturn
+}
+
+
+function vis_gitActivateAnon {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo bisosAccounts.sh -h -v -n showRun -i fullUpdate passwd_tmpSame
+
+    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+
+    lpDo bisosBaseDirSetup.sh -h -v -n showRun -i bisosBaseDirsSetup
+
+    lpReturn
 }
 
 
