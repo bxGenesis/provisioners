@@ -1,3 +1,8 @@
+#!/bin/bash
+
+#
+# This file is shared between ./bisosProvisioners.sh and /usr/local/bin/bisosProvision.sh
+#
 
 
 
