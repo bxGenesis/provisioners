@@ -3,6 +3,6 @@
 # ../lib/bash/seedIcmLoad.bash common dblock inserted code
 #
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmSelfcontained.bash" -l $0 "$@" 
+    "${mainRepoRoot}/bin/seedIcmSelfReliant.bash" -l $0 "$@" 
     exit $?
 fi

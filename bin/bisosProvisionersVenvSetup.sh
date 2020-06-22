@@ -21,7 +21,7 @@ fi
 # ../lib/bash/seedIcmLoad.bash common dblock inserted code
 #
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmSelfcontained.bash" -l $0 "$@" 
+    "${mainRepoRoot}/bin/seedIcmSelfReliant.bash" -l $0 "$@" 
     exit $?
 fi
 
@@ -71,6 +71,9 @@ _CommentEnd_
 # # /opt/public/osmt/lib/portLib.sh
 . ${opLibBase}/portLib.sh
 
+. ${opBinBase}/sharedParameters_lib.sh
+. ${opBinBase}/bisosProvisioners_lib.sh
+
 
 function G_postParamHook {
      return 0
@@ -87,9 +90,7 @@ function vis_examples {
   cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Bases Initialization" )
-$( examplesSeperatorSection "Python System Environment Setup (For Virtenv)" )
-${G_myName} ${extraInfo} -i pythonSysEnvPrepForVirtenvs
-$( examplesSeperatorSection "BISOS BaseDirs Setup" )
+$( examplesSeperatorSection "Create virtenvs and install packages" )
 ${G_myName} ${extraInfo} -i virtenvsPrep
 ${G_myName} ${extraInfo} -i venvPipInstalls
 _EOF_
@@ -99,10 +100,21 @@ noArgsHook() {
   vis_examples
 }
 
-proisionersBaseDir="/opt/bisosProvisioner}"
+function vis_fullUpdate {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
 
-venvBasePy2="${proisionersBaseDir}/venv/py2"
-venvBasePy3="${proisionersBaseDir}/venv/py3"    
+
+    lpDo vis_virtenvsPrep
+
+    lpDo vis_venvPipInstalls
+    
+    lpReturn
+}
 
 
 
@@ -114,11 +126,21 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    local py3ActivateFile="${venvBasePy3}/bin/activate"
+    local py2ActivateFile="${venvBasePy2}/bin/activate"
 
-    lpDo virtualenv --python=python3 ${venvBasePy3}
+    if [ -f "${py3ActivateFile}" ] ; then
+	ANT_raw "${py3ActivateFile} Exists -- Py3 Venv creation skipped"
+    else
+	lpDo virtualenv --python=python3 ${venvBasePy3}	
+    fi
 
-    lpDo virtualenv --python=python2 ${venvBasePy2}    
-    
+    if [ -f "${py2ActivateFile}" ] ; then
+	ANT_raw "${py2ActivateFile} Exists -- Py2 Venv creation skipped"
+    else
+	lpDo virtualenv --python=python2 ${venvBasePy2}	
+    fi
+
     lpReturn
 }
 
@@ -138,6 +160,11 @@ _EOF_
 
 
     local py2ActivateFile="${venvBasePy2}/bin/activate"
+
+    if [ ! -f "${py2ActivateFile}" ] ; then
+	EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+	lpReturn 101
+    fi
 
     source ${py2ActivateFile}
     
@@ -179,118 +206,6 @@ _EOF_
     
     lpReturn
 }
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_unsupportedPlatform_p    [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_unsupportedPlatform_p {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Ubuntu 2004
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
-
-    lpReturn
-}	
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysInstall_python3    [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_sysInstall_python3 {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    opDo sudo apt-get install -y python3
-
-    lpReturn
-}	
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysInstall_python2    [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_sysInstall_python2 {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    opDo sudo apt-get install -y python2
-
-    lpReturn
-}	
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysInstall_pip3   [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_sysInstall_pip3 {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    opDo sudo apt-get install -y pip3
-
-    lpReturn
-}	
-
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysInstall_pip2   [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_sysInstall_pip2 {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    # cd /tmp; curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
-    # sudo python2 /tmp/get-pip.py
-    lpDo sudo -H pip2 install --no-cache-dir --upgrade pip2
-    
-    lpReturn
-}	
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysInstall_pip3   [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_sysInstal_virtualenv3 {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    lpDo sudo -H pip3 install --no-cache-dir --upgrade virtualenv    
-
-    lpReturn
-}	
-
 
 
 

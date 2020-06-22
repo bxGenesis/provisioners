@@ -14,8 +14,18 @@ _EOF_
     EH_assert [[ $# -eq 1 ]]
     
     local extraInfo="$1"
+    local provisionersBinBase="$( provisionersBinBaseGet )"
 
-  cat  << _EOF_
+    cat  << _EOF_    
+$( examplesSeperatorChapter "BISOS Provisioning Configuration:: Platform Information" )
+bx-platformInfoManage.py    
+$( examplesSeperatorSection "bx-platformInfoManage.py :: Get And Set Parameters" )
+bx-platformInfoManage.py  -i pkgInfoParsGet
+bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_provisioners | cut -d '=' -f 2
+bx-platformInfoManage.py -v 20 --rootDir_provisioners="/opt/bisosProvisioner"  -i pkgInfoParsSet
+_EOF_
+
+    cat  << _EOF_
 $( examplesSeperatorChapter "Development Feature:: Git Enable, Activate, Prep" )
 ${G_myName} ${extraInfo} -i gitReposReport
 $( examplesSeperatorSection "Git Auth (Development) Setups" )
@@ -28,12 +38,18 @@ ${G_myName} ${extraInfo} -i gitActivateAnon
 _EOF_
     
     cat  << _EOF_
-$( examplesSeperatorChapter "BISOS Provisioning:: Selfcontained ICMs Invocations" )
-$( examplesSeperatorSection "Create Accounts" )
-${G_myName} ${extraInfo} -i updateAccts
-$( examplesSeperatorSection "Create BisosProv Virtenvs" )
+$( examplesSeperatorChapter "BISOS Provisioning:: SelfReliant ICMs Invocations" )
+$( examplesSeperatorSection "Sys Install Pythons And Pips And Sys Packages" )
+${provisionersBinBase}/bisosSysPythonSetup.sh
 ${G_myName} ${extraInfo} -i pythonSysEnvPrepForVirtenvs
+$( examplesSeperatorSection "Create Accounts" )
+${provisionersBinBase}/bisosAccounts.sh
+${G_myName} ${extraInfo} -i updateAccts
+$( examplesSeperatorSection "Create BisosProv Virtenvs And Install Packages" )
+${provisionersBinBase}/bisosProvisionersVenvSetup.sh
+${G_myName} ${extraInfo} -i provisionersVenvPipInstalls
 $( examplesSeperatorSection "Create /bisos Bases" )
+${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 _EOF_
 }
@@ -81,7 +97,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    # local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    local selfcontainedBase=$( vis_rootDirProvisionersGet 2> /dev/null )        
     local gitReposAuthBase="${selfcontainedBase}/gitReposAuth"
     local thisRepoDir="${gitReposAuthBase}/provisioners"
 
@@ -104,7 +121,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    # local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    local selfcontainedBase=$( vis_rootDirProvisionersGet 2> /dev/null )        
     local gitReposAuthBase="${selfcontainedBase}/gitReposAuth"
     local gitReposBase="${selfcontainedBase}/gitRepos"    
 
@@ -136,7 +154,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    # local selfcontainedBase=$( vis_basedOnGitDetermineThisSelfcontainedBase 2> /dev/null )
+    local selfcontainedBase=$( vis_rootDirProvisionersGet 2> /dev/null )            
     local gitReposAnonBase="${selfcontainedBase}/gitReposAnon"
     local gitReposBase="${selfcontainedBase}/gitRepos"    
 
@@ -156,9 +175,11 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local provisionersBinBase=""
+    local provisionersRootDir="$( vis_rootDirProvisionersGet )"
     
     if [ -z "${thisGitRoot}" ] ; then
-	provisionersBinBase="/opt/bisosProvisioner/gitRepos/provisioners/bin"
+	# /opt/bisosProvisioner/gitRepos/provisioners/bin
+	provisionersBinBase="${provisionersRootDir}/gitRepos/provisioners/bin"
     else
 	provisionersBinBase="${thisGitRoot}/bin"
     fi
@@ -211,7 +232,7 @@ _EOF_
     lpReturn
 }
 
-function vis_pythonSysEnvPrepForVirtenvs {
+function vis_provisionersVenvPipInstalls {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
@@ -227,7 +248,7 @@ _EOF_
 	EH_problem "Missing ${bisosProg}"
 	lpReturn 1
     else	
-    	opDo "${bisosProg}" -h -v -n showRun -i venvPipInstalls
+    	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
     
     lpReturn

@@ -2,7 +2,7 @@
 
 IcmBriefDescription="NOTYET: Short Description Of The Module"
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/mainRepoRootDetermine.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/mainRepoRootDetermine.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/mainRepoRootDetermine.bash common dblock inserted code
@@ -15,13 +15,13 @@ fi
 
 ####+END:
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/seedIcmLoad.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/seedIcmLoad.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/seedIcmLoad.bash common dblock inserted code
 #
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmStandalone.bash" -l $0 "$@" 
+    "${mainRepoRoot}/bin/seedIcmSelfReliant.bash" -l $0 "$@" 
     exit $?
 fi
 
@@ -40,6 +40,8 @@ _EOF_
 # # /opt/public/osmt/lib/portLib.sh
 . ${opLibBase}/portLib.sh
 
+. ${opBinBase}/sharedParameters_lib.sh
+. ${opBinBase}/bisosProvisioners_lib.sh
 
 function G_postParamHook {
      return 0

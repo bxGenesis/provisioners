@@ -21,7 +21,7 @@ fi
 # ../lib/bash/seedIcmLoad.bash common dblock inserted code
 #
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmSelfcontained.bash" -l $0 "$@" 
+    "${mainRepoRoot}/bin/seedIcmSelfReliant.bash" -l $0 "$@" 
     exit $?
 fi
 
@@ -40,6 +40,8 @@ _EOF_
 # # /opt/public/osmt/lib/portLib.sh
 . ${opLibBase}/portLib.sh
 
+. ${opBinBase}/sharedParameters_lib.sh
+. ${opBinBase}/bisosProvisioners_lib.sh
 
 function G_postParamHook {
      return 0
@@ -95,9 +97,9 @@ _EOF_
     
     lpDo vis_userAcctUpdate_bisos ${passwdPolicy}
     
-    lpDo vis_userAcctUpdate_bystar ${passwdPolicy}
+    # lpDo vis_userAcctUpdate_bystar ${passwdPolicy}
 
-    lpDo vis_userAcctsReport bisos  bystar
+    lpDo vis_userAcctsReport bisos  # bystar
 
     lpReturn
 }
@@ -114,7 +116,7 @@ _EOF_
     # Order is important
     #
 
-    lpDo vis_userAcctsDelete bystar
+    # lpDo vis_userAcctsDelete bystar
     
     lpDo vis_userAcctsDelete bisos
 
@@ -127,7 +129,7 @@ _EOF_
 function vis_userAcctUpdate_bystar {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+This is not being used at this time. It should be moved into a bisos environment script.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -185,9 +187,18 @@ _EOF_
 
     local passwdPolicy=$1
 
-    local userAcctName="bisos"
-    local userAcctGroup="bisos"    
-    local userAcctPasswd="bisos"    
+    if [ -z "${bisosUserName}" ] ; then
+	EH_problem "Missing bisosUserName"
+	lpReturn 101
+    fi
+
+    if [ -z "${bisosGroupName}" ] ; then
+	EH_problem "Missing bisosGroupName"
+	lpReturn 101
+    fi
+
+    local userAcctName="${bisosUserName}"
+    local userAcctGroup="${bisosGroupName}"    
 
     if vis_userAcctsExist ${userAcctName} ; then
 	EH_problem "${userAcctName} User Acct Already Exists"
@@ -209,6 +220,7 @@ _EOF_
     lpDo useradd \
 	 --home /bisos \
 	 --no-create-home \
+	 --gid "${userAcctGroup}" \	 
 	 --shell /usr/sbin/nologin \
 	 --comment "ByStar Internet Services OS" \
 	 ${userAcctName}

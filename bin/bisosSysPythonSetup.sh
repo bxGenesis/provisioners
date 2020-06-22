@@ -2,7 +2,7 @@
 
 IcmBriefDescription="NOTYET: Short Description Of The Module"
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/mainRepoRootDetermine.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/mainRepoRootDetermine.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/mainRepoRootDetermine.bash common dblock inserted code
@@ -15,13 +15,13 @@ fi
 
 ####+END:
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/seedIcmLoad.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/seedIcmLoad.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/seedIcmLoad.bash common dblock inserted code
 #
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmStandalone.bash" -l $0 "$@" 
+    "${mainRepoRoot}/bin/seedIcmSelfReliant.bash" -l $0 "$@" 
     exit $?
 fi
 
@@ -96,33 +96,13 @@ ${G_myName} ${extraInfo} -i sysInstall_python2
 ${G_myName} ${extraInfo} -i sysInstall_pip3
 ${G_myName} ${extraInfo} -i sysInstall_pip2
 ${G_myName} ${extraInfo} -i sysPipInstall_virtualenv3
-${G_myName} ${extraInfo} -i sysPipInstall_virtualenv2
+${G_myName} ${extraInfo} -i sysPipInstall_bisosPlatform2
 _EOF_
 }
 
 noArgsHook() {
   vis_examples
 }
-
-
-
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_unsupportedPlatform_p    [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_unsupportedPlatform_p {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-Ubuntu 2004
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-
-    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
-
-    lpReturn
-}	
 
 
 
@@ -153,8 +133,8 @@ _EOF_
 
     opDo vis_sysPipInstall_virtualenv3
 
-    opDo vis_sysPipInstall_virtualenv2
-   
+    vis_sysPipInstall_bisosPlatform2    
+
     # lpDo sudo -H pip list
 
     lpReturn
@@ -263,6 +243,7 @@ _CommentEnd_
 function vis_sysPipInstall_virtualenv3 {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+We can only have one version of virtualenv. So, there is no vis_sysPipInstall_virtualenv2.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -273,19 +254,15 @@ _EOF_
 }	
 
 
-_CommentBegin_
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(beginning-of-buffer)][|^]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]] || IIC       ::  vis_sysPipInstall_virtualenv2   [[elisp:(org-cycle)][| ]]
-_CommentEnd_
-
-
-function vis_sysPipInstall_virtualenv2 {
+function vis_sysPipInstall_bisosPlatform2 {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
+To provide parameters for destination provisioning
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo sudo -H pip2 install --no-cache-dir --upgrade virtualenv    
+    lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform    
 
     lpReturn
 }	

@@ -2,7 +2,7 @@
 
 IcmBriefDescription="NOTYET: Short Description Of The Module"
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/mainRepoRootDetermine.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/mainRepoRootDetermine.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/mainRepoRootDetermine.bash common dblock inserted code
@@ -15,13 +15,13 @@ fi
 
 ####+END:
 
-####+BEGIN: bx:dblock:global:file-insert :file "../lib/bash/seedIcmLoad.bash"
+####+BEGIN: bx:dblock:global:file-insert :mode "none" :file "../lib/bash/seedIcmLoad.bash"
 #
 # DO NOT EDIT THIS SECTION (dblock)
 # ../lib/bash/seedIcmLoad.bash common dblock inserted code
 #
 if [ "${loadFiles}" == "" ] ; then
-    "${mainRepoRoot}/bin/seedIcmStandalone.bash" -l $0 "$@" 
+    "${mainRepoRoot}/bin/seedIcmSelfReliant.bash" -l $0 "$@" 
     exit $?
 fi
 
@@ -84,7 +84,9 @@ _EOF_
 # # /opt/public/osmt/lib/portLib.sh
 . ${opLibBase}/portLib.sh
 
-. ./sharedParameters_lib.sh
+. ${opBinBase}/sharedParameters_lib.sh
+. ${opBinBase}/bisosProvisioners_lib.sh
+
 
 function G_postParamHook {
      return 0
@@ -145,24 +147,35 @@ _EOF_
     local py2ActivateFile="${venvBasePy2}/bin/activate"
 
     source ${py2ActivateFile}
+
+    if [ -z "${bisosUserName}" ] ; then
+	EH_problem "Missing bisosUserName"
+	lpReturn 101
+    fi
+
+    if [ -z "${bisosGroupName}" ] ; then
+	EH_problem "Missing bisosGroupName"
+	lpReturn 101
+    fi
+
     
 
     #local currentUser=$(id -un)
     #local currentUserGroup=$(id -g -n ${currentUser})
 
-    local currentUser="bisos"
-    local currentUserGroup="bisos"
+    local currentUser="${bisosUserName}"
+    local currentUserGroup="${bisosGroupName}"
     
-    local bisosRootDir="/bisos"
-    local bxoRootDir="/bxo"
-    local deRunRootDir="/de/run"        
+    local bisosRootDir="${rootDir_bisos}"
+    local bxoRootDir="${rootDir_bxo}"
+    local deRunRootDir="${rootDir_deRun}"        
 
-    lpDo bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
-    lpDo bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
+    # lpDo bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
+    # lpDo bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
 
-    lpDo bx-platformInfoManage.py --rootDir_bisos="${bisosRootDir}"  -i pkgInfoParsSet
-    lpDo bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
-    lpDo bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
+    # lpDo bx-platformInfoManage.py --rootDir_bisos="${bisosRootDir}"  -i pkgInfoParsSet
+    # lpDo bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
+    # lpDo bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
 
     ANT_raw "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
     lpDo bx-platformInfoManage.py -i pkgInfoParsGet
