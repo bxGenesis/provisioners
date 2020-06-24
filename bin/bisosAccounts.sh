@@ -216,7 +216,7 @@ _EOF_
 	lpReturn 101
     fi
 
-    if vis_groupsExist ${userAcctGroup} ; then    
+    if vis_groupsExist ${userAcctGroup} ; then
 	ANT_raw "${userAcctGroup} Group Exists, groupsAdd skipped"
     else
 	vis_groupsAdd ${userAcctGroup}
@@ -229,7 +229,7 @@ _EOF_
     lpDo useradd \
 	 --home /bisos \
 	 --no-create-home \
-	 --gid "${userAcctGroup}" \	 
+	 --gid "${userAcctGroup}" \
 	 --shell /usr/sbin/nologin \
 	 --comment "ByStar Internet Services OS" \
 	 ${userAcctName}
