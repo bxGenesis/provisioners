@@ -141,7 +141,7 @@ _EOF_
     local userAcctName="bystar"
     local userAcctGroup="bisos"
     #local userAcctSupplementryGroups=""        
-    local userAcctPasswd=""    
+    local userAcctPasswd=""
 
     if vis_userAcctsExist ${userAcctName} ; then
 	EH_problem "${userAcctName} Exists"
@@ -166,10 +166,10 @@ _EOF_
     #
     #lpDo sudo usermod -aG wheel ${userAcctPasswd}
     #
-    
+
     lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
 
-    lpDo vis_userAcctsReport ${userAcctName} 
+    lpDo vis_userAcctsReport ${userAcctName}
 
     lpReturn
 }
@@ -180,7 +180,7 @@ _EOF_
 function vis_userAcctUpdate_bisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+echo someParam and args.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -200,7 +200,7 @@ _EOF_
     fi
 
     local userAcctName="${bisosUserName}"
-    local userAcctGroup="${bisosGroupName}"    
+    local userAcctGroup="${bisosGroupName}"
 
     if vis_userAcctsExist ${userAcctName} ; then
 	EH_problem "${userAcctName} User Acct Already Exists"
@@ -221,7 +221,7 @@ _EOF_
     else
 	vis_groupsAdd ${userAcctGroup}
     fi
-	
+
     #
     # No Home, No Login-Shell
     #  	 	 --gid ${userAcctGroup}
@@ -235,16 +235,16 @@ _EOF_
 	 ${userAcctName}
 
     lpDo sudo sh -c "echo ${userAcctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
-    
-    lpDo vis_userAcctsReport ${userAcctName} 
-    
+
+    lpDo vis_userAcctsReport ${userAcctName}
+
     lpReturn
 }
 
 function vis_userAcctsDelete {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+echo someParam and args
 _EOF_
     }
     EH_assert [[ $# -gt 0 ]]

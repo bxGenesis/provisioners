@@ -471,16 +471,16 @@ vis_opRunDistFamilySet () {
 	      elif grep "16.04" /etc/issue ; then
 		opRunDistGeneration="1604"
 		opRunDistGenNu="16.04"
-	      elif FN_lineIsInFile "Beaver" /etc/issue ; then  # LTS
+	      elif grep "Beaver" /etc/issue ; then  # LTS
 		opRunDistGeneration="1804"
 		opRunDistGenNu="18.04"
-	      elif FN_lineIsInFile "18.04" /etc/issue ; then  # LTS
+	      elif grep "18.04" /etc/issue ; then  # LTS
 		opRunDistGeneration="1804"
 		opRunDistGenNu="18.04"
-	      elif FN_lineIsInFile "Focal" /etc/issue ; then  # LTS
+	      elif grep "Focal" /etc/issue ; then  # LTS
 		opRunDistGeneration="2004"
 		opRunDistGenNu="20.04"
-	      elif FN_lineIsInFile "20.04" /etc/issue ; then  # LTS
+	      elif grep "20.04" /etc/issue ; then  # LTS
 		opRunDistGeneration="2004"
 		opRunDistGenNu="20.04"
 	      else
