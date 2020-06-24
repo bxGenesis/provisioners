@@ -51,6 +51,10 @@ ${G_myName} ${extraInfo} -i provisionersVenvPipInstalls
 $( examplesSeperatorSection "Create /bisos Bases" )
 ${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
+$( examplesSeperatorSection "Run OSMT Genesis" )
+${provisionersBinBase}/osmtGenesisSelfcontained.sh
+${G_myName} ${extraInfo} -i osmtGenesis
+${G_myName} ${extraInfo} -i osmtGenesis atNeda
 _EOF_
 }
 
@@ -272,6 +276,31 @@ _EOF_
 	lpReturn 1
     else	
     	opDo "${bisosProg}" -h -v -n showRun -i bisosBaseDirsSetup
+    fi
+    
+    lpReturn
+}
+
+
+function vis_osmtGenesis {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -ge 0 ]]
+
+    local icmArgs="$@"
+
+    local provisionersBinBase="$( provisionersBinBaseGet )"
+	
+    # /opt/bisosProvisioner/gitRepos/provisioners/bin/osmtGenesisSelfcontained.sh
+    local bisosProg="${provisionersBinBase}/osmtGenesisSelfcontained.sh"
+
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" $@
     fi
     
     lpReturn
