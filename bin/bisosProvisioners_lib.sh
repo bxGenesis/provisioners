@@ -300,7 +300,7 @@ _EOF_
 	EH_problem "Missing ${bisosProg}"
 	lpReturn 1
     else	
-    	opDo "${bisosProg}" $@
+    	opDo sudo "${bisosProg}" $@
     fi
     
     lpReturn
