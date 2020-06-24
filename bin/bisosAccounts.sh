@@ -175,6 +175,8 @@ _EOF_
 }
 
 
+
+
 function vis_userAcctUpdate_bisos {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -202,17 +204,24 @@ _EOF_
 
     if vis_userAcctsExist ${userAcctName} ; then
 	EH_problem "${userAcctName} User Acct Already Exists"
+
+	#
+	# The account does not exist, so the group should not exist as well
+	#
+
+	if vis_groupsExist ${userAcctGroup} ; then
+	    EH_problem "${userAcctGroup} Group Exists, It Should Not"
+	    lpDo vis_groupsDelete ${userAcctGroup}
+	fi
 	lpReturn 101
     fi
 
-    #
-    # The account does not exist, so the group should not exist as well
-    #
-
-    if vis_groupsExist ${userAcctGroup} ; then
-	lpDo vis_groupsDelete ${userAcctGroup}
+    if vis_groupsExist ${userAcctGroup} ; then    
+	ANT_raw "${userAcctGroup} Group Exists, groupsAdd skipped"
+    else
+	vis_groupsAdd ${userAcctGroup}
     fi
-
+	
     #
     # No Home, No Login-Shell
     #  	 	 --gid ${userAcctGroup}
@@ -260,6 +269,36 @@ _EOF_
     
     lpReturn
 }
+
+function vis_groupsAdd {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Add specified groups.
+_EOF_
+    }
+    EH_assert [[ $# -gt 0 ]]
+
+    local inputsList="$@"
+    local each=""
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local groupName=$1
+	if vis_groupsExist ${groupName} ; then
+	    EH_problem "${groupName} Already Does Exist -- ${thisFunc} Processing Skipped"
+	    lpReturn 101
+	fi
+	lpDo sudo groupadd ${groupName}    	
+    }
+    
+    for each in ${inputsList} ; do
+	lpDo processEach ${each}
+    done
+    
+    lpReturn
+}
+
 
 function vis_groupsDelete {
     G_funcEntry
