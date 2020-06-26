@@ -4,6 +4,39 @@
 # This file is shared between ./bisosProvisioners.sh and /usr/local/bin/bisosProvision.sh
 #
 
+currentUser=$(id -un)
+currentUserGroup=$(id -g -n ${currentUser})
+
+
+bx_platformInfoManage=$( which -a bx-platformInfoManage.py | grep -v venv | head -1 )
+
+
+bisosUserName=""
+bisosGroupName=""
+    
+rootDir_bisos=""
+rootDir_bxo=""
+rootDir_deRun=""
+
+rootDir_provisioners=""
+
+venvBasePy2=""
+venvBasePy3=""
+
+
+if [ -f "${bx_platformInfoManage}" ] ; then 
+    bisosUserName=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep bisosUserName | cut -d '=' -f 2 )
+    bisosGroupName=$( ${bx_platformInfoManage}  -i pkgInfoParsGet | grep bisosGroupName | cut -d '=' -f 2 )
+    
+    rootDir_bisos=$( ${bx_platformInfoManage}  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
+    rootDir_bxo=$( ${bx_platformInfoManage}  -i pkgInfoParsGet | grep rootDir_bxo | cut -d '=' -f 2 )
+    rootDir_deRun=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep rootDir_deRun | cut -d '=' -f 2 )        
+
+    rootDir_provisioners=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep rootDir_provisioners | cut -d '=' -f 2 )
+
+    venvBasePy2="${rootDir_provisioners}/venv/py2"
+    venvBasePy3="${rootDir_provisioners}/venv/py3"    
+fi
 
 
 function vis_provisionersExamples {
@@ -51,10 +84,13 @@ ${G_myName} ${extraInfo} -i provisionersVenvPipInstalls
 $( examplesSeperatorSection "Create /bisos Bases" )
 ${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
+$( examplesSeperatorSection "Anon Git Clone BxRepos" )
+(. activateFile; bx-gitReposBases )
+sudo -u bisos ${G_myName} ${extraInfo} -i bxGitReposBasesAnon
 $( examplesSeperatorSection "Run OSMT Genesis" )
-${provisionersBinBase}/osmtGenesisSelfcontained.sh
-${G_myName} ${extraInfo} -i osmtGenesis
-${G_myName} ${extraInfo} -i osmtGenesis atNeda
+${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
+${G_myName} ${extraInfo} -i osmtGenesis baseIoC
+${G_myName} ${extraInfo} -i osmtGenesis baseIoC atNeda
 _EOF_
 }
 
@@ -282,6 +318,26 @@ _EOF_
 }
 
 
+function vis_bxGitReposBasesAnon {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+bx-gitReposBases -v 20 --baseDir="/bisos/git/anon/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+_EOF_
+    }
+    # EH_assert [[ $# -eq 1 ]]
+
+    # local bisosRootDir=$1
+
+    local py2ActivateFile="${venvBasePy2}/bin/activate"
+
+    source ${py2ActivateFile}
+    
+    lpDo bx-gitReposBases -v 20 --baseDir="/bisos/git/anon/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+}
+
+
+
+
 function vis_osmtGenesis {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -293,14 +349,15 @@ _EOF_
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
 	
-    # /opt/bisosProvisioner/gitRepos/provisioners/bin/osmtGenesisSelfcontained.sh
-    local bisosProg="${provisionersBinBase}/osmtGenesisSelfcontained.sh"
+    # /opt/bisosProvisioner/gitRepos/provisioners/bin/osmtBx2GenesisSelfcontained.sh
+    local bisosProg="${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
 	EH_problem "Missing ${bisosProg}"
 	lpReturn 1
-    else	
-    	opDo sudo "${bisosProg}" $@
+    else
+	osmtBx2GenesisSelfcontained.sh -h -v -n showRun -r basic -i baseIoC            # Blee + Ability To Import Io
+    	opDo sudo "${bisosProg}"  -h -v -n showRun -r basic -i $@
     fi
     
     lpReturn

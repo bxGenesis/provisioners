@@ -192,7 +192,7 @@ _EOF_
     #
     # With the above rootDirs in place, bx-bases need not do any sudo-s
     #
-    lpDo sudo /bin/rm /tmp/NOTYET.log  # NOTYET
+    #lpDo sudo /bin/rm /tmp/NOTYET.log  # NOTYET
     lpDo sudo -H -u ${currentUser} ${G_myFullName} -h -v -n showRun -i bxBasesUpdateAll "${bisosRootDir}"
 }
 
