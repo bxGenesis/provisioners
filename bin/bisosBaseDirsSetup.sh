@@ -211,7 +211,12 @@ _EOF_
 
     source ${py2ActivateFile}
     
-    lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" -i pbdUpdate all
+    lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
+
+    lpDo bx-bases -v 20 --baseDir="${rootDir_deRun}" --pbdName="deRunRoot"  -i pbdUpdate all
+
+    lpDo bx-bases -v 20 --baseDir="${rootDir_bxo}" --pbdName="bxoRoot"  -i pbdUpdate all
+    
 }
 
 

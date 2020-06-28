@@ -168,13 +168,15 @@ _EOF_
 
     source ${py2ActivateFile}
     
-    lpDo pip install bisos.bx-bases
+    lpDo pip2 install --upgrade bisos.platform
 
-    lpDo pip install bisos.platform
+    lpDo pip2 install --upgrade bisos.common
+
+    lpDo pip2 install --upgrade bisos.bx-bases
 
     which -a bx-platformInfoManage.py
 
-    lpDo pip list 
+    lpDo pip2 list 
     
     # touch /tmp/NOTYET.log
 
