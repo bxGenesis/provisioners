@@ -6,6 +6,8 @@
 
 _CommentBegin_
 ****** TODO Add blee symlinks
+****** TODO Add git clone auth as well
+****** TODO Drive this for development
 _CommentEnd_
 
 
@@ -92,10 +94,13 @@ ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 $( examplesSeperatorSection "Anon Git Clone BxRepos" )
 (. activateFile; bx-gitReposBases )
 sudo -u bisos ${G_myName} ${extraInfo} -i bxGitReposBasesAnon
+$( examplesSeperatorChapter "Temporary OSMT Setup" )
 $( examplesSeperatorSection "Run OSMT Genesis" )
 ${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
 ${G_myName} ${extraInfo} -i osmtGenesis baseIoC
 ${G_myName} ${extraInfo} -i osmtGenesis baseIoC atNeda
+$( examplesSeperatorChapter "BISOS Bases Administration (/bisos/core)" )
+$( examplesSeperatorSection "Sys Install Pythons And Pips And Sys Packages" )
 _EOF_
 }
 
