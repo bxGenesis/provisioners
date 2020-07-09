@@ -100,7 +100,7 @@ ${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
 ${G_myName} ${extraInfo} -i osmtGenesis baseIoC
 ${G_myName} ${extraInfo} -i osmtGenesis baseIoC atNeda
 $( examplesSeperatorChapter "BISOS Bases Administration (/bisos/core)" )
-$( examplesSeperatorSection "Sys Install Pythons And Pips And Sys Packages" )
+$( examplesSeperatorSection "bisosBasesAdmin" )
 _EOF_
 }
 
