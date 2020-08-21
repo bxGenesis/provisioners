@@ -91,6 +91,7 @@ ${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 $( examplesSeperatorSection "Anon Git Clone BxRepos" )
 (. activateFile; bx-gitReposBases )
+${provisionersBinBase}/bisosBaseDirsSetup.sh
 sudo -u bisos ${G_myName} ${extraInfo} -i bxGitReposBasesAnon
 $( examplesSeperatorSection "Run OSMT Genesis" )
 ${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh

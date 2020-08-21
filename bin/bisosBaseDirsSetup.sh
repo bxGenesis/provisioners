@@ -158,8 +158,6 @@ _EOF_
 	lpReturn 101
     fi
 
-    
-
     #local currentUser=$(id -un)
     #local currentUserGroup=$(id -g -n ${currentUser})
 
