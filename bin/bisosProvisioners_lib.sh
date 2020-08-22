@@ -92,7 +92,6 @@ $( examplesSeperatorSection "Create /bisos Bases" )
 ${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 $( examplesSeperatorSection "Anon Git Clone BxRepos" )
-(. activateFile; bx-gitReposBases )
 ${provisionersBinBase}/bisosBaseDirsSetup.sh
 sudo -u bisos ${G_myName} ${extraInfo} -i bxGitReposBasesAnon
 $( examplesSeperatorChapter "Temporary OSMT Setup" )
@@ -343,7 +342,7 @@ _EOF_
 
     source ${py2ActivateFile}
     
-    lpDo bx-gitReposBases -v 20 --baseDir="/bisos/git/anon/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+    lpDo sudo -u bisos bx-gitReposBases -v 20 --baseDir="/bisos/git/anon/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
 }
 
 
@@ -373,3 +372,9 @@ _EOF_
     
     lpReturn
 }
+
+
+# Use the rest till /bisos/bsip/xx is in place,
+# if [ -f "${bisosBsipNotyet}" ] ; then
+#     . ${something}
+# fi
