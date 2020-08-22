@@ -215,12 +215,12 @@ _EOF_
     
     lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
 
-    lpDo bx-bases -v 20 --baseDir="${rootDir_deRun}" --pbdName="deRunRoot"  -i pbdUpdate all
+    lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bleeRoot" -i pbdUpdate all    
 
-    lpDo bx-bases -v 20 --baseDir="${rootDir_bxo}" --pbdName="bxoRoot"  -i pbdUpdate all
+    lpDo bx-bases -v 20 --baseDir="${rootDir_deRun}" --pbdName="deRunRoot" -i pbdUpdate all
+
+    lpDo bx-bases -v 20 --baseDir="${rootDir_bxo}" --pbdName="bxoRoot" -i pbdUpdate all
 }
-
-
 
 
 function vis_provisionersGitReposAnonSetup {
@@ -249,7 +249,7 @@ _EOF_
     local currentUser="${bisosUserName}"
     local currentUserGroup="${bisosGroupName}"
     
-    local bxGitReposBase="${rootDir_bisos}/git/anon/bxRepos"
+    local bxGitReposBase="${rootDir_bisos}/git/anon"
 
     lpDo sudo -H -u ${currentUser} ${G_myFullName} -h -v -n showRun -i bxGitReposBasesAnon "${bxGitReposBase}"
 }
@@ -258,7 +258,7 @@ _EOF_
 function vis_bxGitReposBasesAnon {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
-echo someParam and args 
+Arg1 is expected to be something like /bisos/git/anon to which bxRepos and ext will be appended.
 _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
@@ -269,7 +269,8 @@ _EOF_
 
     source ${py2ActivateFile}
     
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode="anon"  -i pbdUpdate all    
 }
 
 
