@@ -93,7 +93,7 @@ ${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 $( examplesSeperatorSection "Anon Git Clone BxRepos" )
 ${provisionersBinBase}/bisosBaseDirsSetup.sh
-sudo -u bisos ${G_myName} ${extraInfo} -i bxGitReposBasesAnon
+${G_myName} ${extraInfo} -i provisionersGitReposAnonSetup   # Runs as sudo -u bisos 
 $( examplesSeperatorChapter "Temporary OSMT Setup" )
 $( examplesSeperatorSection "Run OSMT Genesis" )
 ${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
@@ -328,22 +328,28 @@ _EOF_
 }
 
 
-function vis_bxGitReposBasesAnon {
+function vis_provisionersGitReposAnonSetup {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 bx-gitReposBases -v 20 --baseDir="/bisos/git/anon/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
 _EOF_
     }
-    # EH_assert [[ $# -eq 1 ]]
+    EH_assert [[ $# -eq 0 ]]
 
-    # local bisosRootDir=$1
+    local provisionersBinBase="$( provisionersBinBaseGet )"
+	
+    # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosBaseDirsSetup.sh
+    local bisosProg="${provisionersBinBase}/bisosBaseDirsSetup.sh"
 
-    local py2ActivateFile="${venvBasePy2}/bin/activate"
-
-    source ${py2ActivateFile}
+    if [ ! -x "${bisosProg}" ] ; then
+	EH_problem "Missing ${bisosProg}"
+	lpReturn 1
+    else	
+    	opDo "${bisosProg}" -h -v -n showRun -i provisionersGitReposAnonSetup
+    fi
     
-    lpDo sudo -u bisos bx-gitReposBases -v 20 --baseDir="/bisos/git/anon/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
-}
+    lpReturn
+ }
 
 
 

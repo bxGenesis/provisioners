@@ -106,7 +106,11 @@ $( examplesSeperatorChapter "BISOS Bases Initialization" )
 $( examplesSeperatorSection "Python System Environment Setup (For Virtenv)" )
 ${G_myName} ${extraInfo} -i pythonSysEnvPrepForVirtenvs
 $( examplesSeperatorSection "BISOS BaseDirs Setup" )
-${G_myName} ${extraInfo} -i bisosBaseDirsSetup
+${G_myName} ${extraInfo} -i bisosBaseDirsSetup       # Runs with sudo -u bisos
+${G_myName} ${extraInfo} -i bxBasesUpdateAll         # runs as current user
+$( examplesSeperatorSection "BISOS GitReposBases Setup" )
+${G_myName} ${extraInfo} -i provisionersGitReposAnonSetup       # Runs with sudo -u bisos
+${G_myName} ${extraInfo} -i bxGitReposBasesAnon /bisos/git/anon/bxRepos   # runs as current user
 _EOF_
 }
 
@@ -214,7 +218,58 @@ _EOF_
     lpDo bx-bases -v 20 --baseDir="${rootDir_deRun}" --pbdName="deRunRoot"  -i pbdUpdate all
 
     lpDo bx-bases -v 20 --baseDir="${rootDir_bxo}" --pbdName="bxoRoot"  -i pbdUpdate all
+}
+
+
+
+
+function vis_provisionersGitReposAnonSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    #
+    # Running user should have sudo privileges
+    # 
+    #
+
+    if [ -z "${bisosUserName}" ] ; then
+	EH_problem "Missing bisosUserName"
+	lpReturn 101
+    fi
+
+    if [ -z "${bisosGroupName}" ] ; then
+	EH_problem "Missing bisosGroupName"
+	lpReturn 101
+    fi
+
+    local currentUser="${bisosUserName}"
+    local currentUserGroup="${bisosGroupName}"
     
+    local bxGitReposBase="${rootDir_bisos}/git/anon/bxRepos"
+
+    lpDo sudo -H -u ${currentUser} ${G_myFullName} -h -v -n showRun -i bxGitReposBasesAnon "${bxGitReposBase}"
+}
+
+
+function vis_bxGitReposBasesAnon {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args 
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local baseDir=$1
+
+    local py2ActivateFile="${venvBasePy2}/bin/activate"
+
+    source ${py2ActivateFile}
+    
+    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
 }
 
 
