@@ -37,7 +37,8 @@
 ####+END
 ** 
 ** Determines bases using system's bx-platformInfoManage.py if available.
-** 
+** Order of invokation is in /usr/local/bin/bisosProvision.sh -i baseBisosPlatform
+** B|
 ####+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :sep t :title "Files Description" :anchor "" :extraInfo ""
 * /[[elisp:(beginning-of-buffer)][|^]]  [[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]] [[elisp:(delete-other-windows)][|1]]/ 
 * [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(org-cycle)][| _Files Description_: |]]    [[elisp:(org-shifttab)][<)]] E|
