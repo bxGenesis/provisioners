@@ -11,8 +11,130 @@ _CommentBegin_
 _CommentEnd_
 
 
+####+BEGIN: bx:dblock:global:file-insert :mode "bash" :file "/bisos/core/bsip/bin/platformBases_lib.sh"
+#
+# This File: platformBases_lib.sh
+#
+
+#
+# This file is shared between ./provisionBisos.sh and /usr/local/bin/bisosProvision.sh
+#
+# It sets up variables prefixed with bxp_  (BISOS Platform) all mapping to bx-platformInfoManage.py
+#
+# Then based on bxp_ s derived variable are prefixed as pdb_ (platform dir bases)
+#
+
+bxp_currentUser=$( id -un )
+bxp_currentUserGroup=$( id -g -n ${currentUser} )
+
+bx_platformInfoManage=$( which -a bx-platformInfoManage.py | grep -v venv | head -1 )
+
+function bxp_platformInfoManageVarGet {
+    EH_assert [[ $# -eq 1 ]]
+
+    local varName=$1
+    local outVal=""
+
+    if [ -f "${bx_platformInfoManage}" ] ; then 
+	outVal=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep ${varName} | cut -d '=' -f 2 )
+    fi
+    echo "${outVal}"
+}
+
+function bxp_bisosUserName_get {
+    local default="/bisos"
+    local outVal=""
+    outVal=$( bxp_platformInfoManageVarGet "bisosUserName" )
+    if [ -z "${outVal}" ] ; then
+	outVal="${default}"
+    fi
+    echo ${outVal}
+}
+
+function bxp_bisosGroupName_get {
+    local default="/bisos"
+    local outVal=""
+    outVal=$( bxp_platformInfoManageVarGet "bisosGroupName" )
+    if [ -z "${outVal}" ] ; then
+	outVal="${default}"
+    fi
+    echo ${outVal}
+}
+
+function bxp_rootDir_bisos_get {
+    local default="/bisos"
+    local outVal=""
+    outVal=$( bxp_platformInfoManageVarGet "rootDir_bisos" )
+    if [ -z "${outVal}" ] ; then
+	outVal="${default}"
+    fi
+    echo ${outVal}
+}
+
+function bxp_rootDir_bxo_get {
+    local default="/bxo"
+    local outVal=""
+    outVal=$( bxp_platformInfoManageVarGet "rootDir_bxo" )
+    if [ -z "${outVal}" ] ; then
+	outVal="${default}"
+    fi
+    echo ${outVal}
+}
+
+function bxp_rootDir_deRun_get {
+    local default="/de/run"
+    local outVal=""
+    outVal=$( bxp_platformInfoManageVarGet "rootDir_deRun" )
+    if [ -z "${outVal}" ] ; then
+	outVal="${default}"
+    fi
+    echo ${outVal}
+}
+
+function bxp_rootDir_provisioners_get {
+    local default="/opt/bisosProvisioner"
+    local outVal=""
+    outVal=$( bxp_platformInfoManageVarGet "rootDir_provisioners" )
+    if [ -z "${outVal}" ] ; then
+	outVal="${default}"
+    fi
+    echo ${outVal}
+}
+
+bxp_bisosUserName="$( bxp_bisosUserName_get )"
+bxp_bisosGroupName="$( bxp_bisosGroupName_get )"
+    
+bxp_rootDir_bisos="$( bxp_rootDir_bisos_get )"
+bxp_rootDir_bxo="$( bxp_rootDir_bxo_get )"
+bxp_rootDir_deRun="$( bxp_rootDir_deRun_get )"
+
+bxp_rootDir_provisioners="$( bxp_rootDir_provisioners_get )"
+
+
+#
+# pdb_ (Platform Dir Bases)
+#
+
+venvBasePy2="${bxp_rootDir_provisioners}/venv/py2"
+venvBasePy3="${bxp_rootDir_provisioners}/venv/py3"    
+
+pdb_bsipBase="${bxp_rootDir_bisos}/core/bsip"
+
+#
+# /bisos/venv/py2-bisos-3  /bisos/venv/py2/bisos3 /bisos/venv/dev/py2/bisos3
+# /bisos/venv/dev-py2-bisos-3
+#
+pdb_venv_py2Bisos3="${bxp_rootDir_bisos}/venv/py2-bisos-3"
+pdb_venv_py2Bisos3Dev="${bxp_rootDir_bisos}/venv/dev-py2-bisos-3"
+pdb_venv_py3Bisos3="${bxp_rootDir_bisos}/venv/py3-bisos-3"
+pdb_venv_py3Bisos3Dev="${bxp_rootDir_bisos}/venv/dev-py3-bisos-3"
+
+####+END
+
 currentUser=$(id -un)
 currentUserGroup=$(id -g -n ${currentUser})
+
+
 
 
 bx_platformInfoManage=$( which -a bx-platformInfoManage.py | grep -v venv | head -1 )
@@ -43,6 +165,41 @@ if [ -f "${bx_platformInfoManage}" ] ; then
 
     venvBasePy2="${rootDir_provisioners}/venv/py2"
     venvBasePy3="${rootDir_provisioners}/venv/py3"    
+fi
+
+
+function provisionerBisosBinBaseGet {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local provisionersBinBase=""
+    local bxp_rootDir_bisos="${rootDir_bisos}"
+
+    if [ -z "${bxp_rootDir_bisos}" ] ; then
+	EH_problem "Blank bxp_rootDir_bisos"
+	lpReturn 101
+    elif [ -d "${bxp_rootDir_bisos}/core/bsip/bin" ] ; then
+	provisionersBinBase="${bxp_rootDir_bisos}/core/bsip/bin"
+    else
+	EH_problem "Missing ${bxp_rootDir_bisos}/core/bsip/bin"
+	lpReturn 101
+    fi
+
+    echo ${provisionersBinBase}
+}
+
+
+provisionerBisosBinBaseGet="$( provisionerBisosBinBaseGet )"    
+    
+#  /bisos/core/bsip/bin/bisosProvision_lib.sh
+bisosBsipProvisionerLib="${provisionerBisosBinBaseGet}/bisosProvision_lib.sh"
+
+if [ -f "${bisosBsipProvisionerLib}" ] ; then
+    source "${provisionerBisosBinBaseGet}/bisosPlatform_lib.sh"
+    source "${bisosBsipProvisionerLib}"
 fi
 
 
@@ -94,6 +251,29 @@ ${G_myName} ${extraInfo} -i bisosBaseDirsSetup
 $( examplesSeperatorSection "Anon Git Clone BxRepos" )
 ${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i provisionersGitReposAnonSetup   # Runs as sudo -u bisos 
+_EOF_
+    
+    osmtTmpExamples "${extraInfo}"
+
+    if [ -f "${bisosBsipProvisionerLib}" ] ; then
+	vis_bisosProvisionExamples "${extraInfo}"
+	echo "__________KKK________"
+    fi
+
+
+}
+
+function osmtTmpExamples {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+    
+    local extraInfo="$1"
+    local provisionersBinBase="$( provisionersBinBaseGet )"
+
+    cat  << _EOF_    
 $( examplesSeperatorChapter "Temporary OSMT Setup" )
 $( examplesSeperatorSection "Run OSMT Genesis" )
 ${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
@@ -103,6 +283,7 @@ $( examplesSeperatorChapter "BISOS Bases Administration (/bisos/core)" )
 $( examplesSeperatorSection "bisosBasesAdmin" )
 _EOF_
 }
+
 
 
 function vis_gitReposReport {
