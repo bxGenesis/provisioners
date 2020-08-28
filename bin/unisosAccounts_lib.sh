@@ -349,7 +349,7 @@ _EOF_
 	EH_problem "Missing passwd entry for ${acctName}"
 	lpReturn 101
     fi
-    local getentField=$( print ${getentStr} | cut -d : -f ${fieldNu} )
+    local getentField=$( echo ${getentStr} | cut -d : -f ${fieldNu} )
     if [ -z "${getentField}" ] ; then
 	EH_problem "Missing passwd field entry for ${acctName} fieldNu ${fieldNu}"
 	lpReturn 101
@@ -381,9 +381,9 @@ _EOF_
     fi
 
     local getentStr=$( getent passwd ${acctName} )
-    local getentAcctUid=$( print ${getentStr} | cut -d : -f 3 )
-    local getentAcctGid=$( print ${getentStr} | cut -d : -f 4 )
-    local getentAcctHome=$( print ${getentStr} | cut -d : -f 6 )    
+    local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
+    local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
+    local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
 
     if [ "${acctUid}" != "${getentAcctUid}" ] ; then
 	ANT_raw "UID of ${acctName} entry in /etc/passwd is not ${acctUid}"

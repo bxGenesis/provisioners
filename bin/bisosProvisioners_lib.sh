@@ -198,7 +198,7 @@ provisionerBisosBinBaseGet="$( provisionerBisosBinBaseGet )"
 bisosBsipProvisionerLib="${provisionerBisosBinBaseGet}/bisosProvision_lib.sh"
 
 if [ -f "${bisosBsipProvisionerLib}" ] ; then
-    source "${provisionerBisosBinBaseGet}/bisosPlatform_lib.sh"
+    source "${provisionerBisosBinBaseGet}/platformBases_lib.sh"
     source "${bisosBsipProvisionerLib}"
 fi
 
