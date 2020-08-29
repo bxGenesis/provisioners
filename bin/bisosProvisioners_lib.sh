@@ -7,48 +7,13 @@
 thisBashFileBaseDir=$( dirname ${BASH_SOURCE[0]} )
 
 source "${thisBashFileBaseDir}/platformBases_lib.sh"
-
-_CommentBegin_
-****** TODO Add blee symlinks
-****** TODO Add git clone auth as well
-****** TODO Drive this for development
-_CommentEnd_
-
-
-currentUser=$(id -un)
-currentUserGroup=$(id -g -n ${currentUser})
-
-
-
-
-bx_platformInfoManage=$( which -a bx-platformInfoManage.py | grep -v venv | head -1 )
-
-
-bisosUserName=""
-bisosGroupName=""
     
-rootDir_bisos=""
-rootDir_bxo=""
-rootDir_deRun=""
+#  /bisos/core/bsip/bin/bsipProvision_lib.sh
+bisosBsipProvisionerLib="${pdb_bsip_bin}/bsipProvision_lib.sh"
 
-rootDir_provisioners=""
-
-venvBasePy2=""
-venvBasePy3=""
-
-
-if [ -f "${bx_platformInfoManage}" ] ; then 
-    bisosUserName=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep bisosUserName | cut -d '=' -f 2 )
-    bisosGroupName=$( ${bx_platformInfoManage}  -i pkgInfoParsGet | grep bisosGroupName | cut -d '=' -f 2 )
-    
-    rootDir_bisos=$( ${bx_platformInfoManage}  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
-    rootDir_bxo=$( ${bx_platformInfoManage}  -i pkgInfoParsGet | grep rootDir_bxo | cut -d '=' -f 2 )
-    rootDir_deRun=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep rootDir_deRun | cut -d '=' -f 2 )        
-
-    rootDir_provisioners=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep rootDir_provisioners | cut -d '=' -f 2 )
-
-    venvBasePy2="${rootDir_provisioners}/venv/py2"
-    venvBasePy3="${rootDir_provisioners}/venv/py3"    
+if [ -f "${bisosBsipProvisionerLib}" ] ; then
+    source "${pdb_bsip_bin}/platformBases_lib.sh"
+    source "${bisosBsipProvisionerLib}"
 fi
 
 
@@ -75,41 +40,6 @@ _EOF_
 	EH_problem "Missing ${bisosBsipProvisionerLib}"
     fi
 }
-
-
-function provisionerBisosBinBaseGet {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 0 ]]
-
-    local provisionersBinBase=""
-    local bxp_rootDir_bisos="${rootDir_bisos}"
-
-    if [ -z "${bxp_rootDir_bisos}" ] ; then
-	EH_problem "Blank bxp_rootDir_bisos"
-	lpReturn 101
-    elif [ -d "${bxp_rootDir_bisos}/core/bsip/bin" ] ; then
-	provisionersBinBase="${bxp_rootDir_bisos}/core/bsip/bin"
-    else
-	EH_problem "Missing ${bxp_rootDir_bisos}/core/bsip/bin"
-	lpReturn 101
-    fi
-
-    echo ${provisionersBinBase}
-}
-
-
-provisionerBisosBinBaseGet="$( provisionerBisosBinBaseGet )"    
-    
-#  /bisos/core/bsip/bin/bsipProvision_lib.sh
-bisosBsipProvisionerLib="${provisionerBisosBinBaseGet}/bsipProvision_lib.sh"
-
-if [ -f "${bisosBsipProvisionerLib}" ] ; then
-    source "${provisionerBisosBinBaseGet}/platformBases_lib.sh"
-    source "${bisosBsipProvisionerLib}"
-fi
 
 
 function vis_provisionersExamples {
