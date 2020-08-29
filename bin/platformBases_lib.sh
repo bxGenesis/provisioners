@@ -1,4 +1,6 @@
-#!/bin/bash
+#
+# This File: platformBases_lib.sh
+#
 
 #
 # This file is shared between ./provisionBisos.sh and /usr/local/bin/bisosProvision.sh
@@ -7,10 +9,6 @@
 #
 # Then based on bxp_ s derived variable are prefixed as pdb_ (platform dir bases)
 #
-
-_CommentBegin_
-* TODO-List
-_CommentEnd_
 
 bxp_currentUser=$( id -un )
 bxp_currentUserGroup=$( id -g -n ${currentUser} )

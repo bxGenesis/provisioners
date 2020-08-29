@@ -54,24 +54,13 @@ function vis_examples {
     typeset examplesInfo="${extraInfo} ${runInfo}"
 
     visLibExamplesOutput ${G_myName} 
-  cat  << _EOF_
+    cat  << _EOF_
 $( examplesSeperatorTopLabel "${G_myName}" )
-$( examplesSeperatorChapter "Git Enable, Activate, Prep" )
-${G_myName} ${extraInfo} -i gitReposReport
-$( examplesSeperatorSection "Git Auth (Development) Setups" )
-${G_myName} ${extraInfo} -i gitPrepAuth
-${G_myName} ${extraInfo} -i gitActivateAuth
-${G_myName} ${extraInfo} -i gitEnableAuth
-$( examplesSeperatorSection "Git Anon (Released) Setups" )
-${G_myName} ${extraInfo} -i gitPrepAnon
-${G_myName} ${extraInfo} -i gitActivateAnon
-$( examplesSeperatorChapter "BISOS Bootstraping Profiles" )
-$( examplesSeperatorSection "bxDistro" )
-${G_myName} ${extraInfo} -i bxDistro
-$( examplesSeperatorSection "bxContainer" )
-${G_myName} ${extraInfo} -i bxContainer
 _EOF_
-  vis_provisionersExamples "${extraInfo}"
+    
+    vis_provisionersExamples "${extraInfo}"
+
+    # osmtTmpExamples "${extraInfo}"    
 }
 
 noArgsHook() {

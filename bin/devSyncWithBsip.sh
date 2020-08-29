@@ -75,6 +75,8 @@ _EOF_
 
     opDo diff /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh
 
+    opDo diff /bisos/core/bsip/bin/platformBases_lib.sh  ./platformBases_lib.sh
+
     lpReturn
 }
 
@@ -97,6 +99,12 @@ _EOF_
 	ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh"
     else
 	lpDo cp /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh	
+    fi
+
+    if cmp /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh; then
+	ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh"
+    else
+	lpDo cp /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh	
     fi
 
     lpReturn

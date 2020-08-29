@@ -4,132 +4,16 @@
 # This file is shared between ./bisosProvisioners.sh and /usr/local/bin/bisosProvision.sh
 #
 
+thisBashFileBaseDir=$( dirname ${BASH_SOURCE[0]} )
+
+source "${thisBashFileBaseDir}/platformBases_lib.sh"
+
 _CommentBegin_
 ****** TODO Add blee symlinks
 ****** TODO Add git clone auth as well
 ****** TODO Drive this for development
 _CommentEnd_
 
-
-####+BEGIN: bx:dblock:global:file-insert :mode "bash" :file "/bisos/core/bsip/bin/platformBases_lib.sh"
-#
-# This File: platformBases_lib.sh
-#
-
-#
-# This file is shared between ./provisionBisos.sh and /usr/local/bin/bisosProvision.sh
-#
-# It sets up variables prefixed with bxp_  (BISOS Platform) all mapping to bx-platformInfoManage.py
-#
-# Then based on bxp_ s derived variable are prefixed as pdb_ (platform dir bases)
-#
-
-bxp_currentUser=$( id -un )
-bxp_currentUserGroup=$( id -g -n ${currentUser} )
-
-bx_platformInfoManage=$( which -a bx-platformInfoManage.py | grep -v venv | head -1 )
-
-function bxp_platformInfoManageVarGet {
-    EH_assert [[ $# -eq 1 ]]
-
-    local varName=$1
-    local outVal=""
-
-    if [ -f "${bx_platformInfoManage}" ] ; then 
-	outVal=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep ${varName} | cut -d '=' -f 2 )
-    fi
-    echo "${outVal}"
-}
-
-function bxp_bisosUserName_get {
-    local default="/bisos"
-    local outVal=""
-    outVal=$( bxp_platformInfoManageVarGet "bisosUserName" )
-    if [ -z "${outVal}" ] ; then
-	outVal="${default}"
-    fi
-    echo ${outVal}
-}
-
-function bxp_bisosGroupName_get {
-    local default="/bisos"
-    local outVal=""
-    outVal=$( bxp_platformInfoManageVarGet "bisosGroupName" )
-    if [ -z "${outVal}" ] ; then
-	outVal="${default}"
-    fi
-    echo ${outVal}
-}
-
-function bxp_rootDir_bisos_get {
-    local default="/bisos"
-    local outVal=""
-    outVal=$( bxp_platformInfoManageVarGet "rootDir_bisos" )
-    if [ -z "${outVal}" ] ; then
-	outVal="${default}"
-    fi
-    echo ${outVal}
-}
-
-function bxp_rootDir_bxo_get {
-    local default="/bxo"
-    local outVal=""
-    outVal=$( bxp_platformInfoManageVarGet "rootDir_bxo" )
-    if [ -z "${outVal}" ] ; then
-	outVal="${default}"
-    fi
-    echo ${outVal}
-}
-
-function bxp_rootDir_deRun_get {
-    local default="/de/run"
-    local outVal=""
-    outVal=$( bxp_platformInfoManageVarGet "rootDir_deRun" )
-    if [ -z "${outVal}" ] ; then
-	outVal="${default}"
-    fi
-    echo ${outVal}
-}
-
-function bxp_rootDir_provisioners_get {
-    local default="/opt/bisosProvisioner"
-    local outVal=""
-    outVal=$( bxp_platformInfoManageVarGet "rootDir_provisioners" )
-    if [ -z "${outVal}" ] ; then
-	outVal="${default}"
-    fi
-    echo ${outVal}
-}
-
-bxp_bisosUserName="$( bxp_bisosUserName_get )"
-bxp_bisosGroupName="$( bxp_bisosGroupName_get )"
-    
-bxp_rootDir_bisos="$( bxp_rootDir_bisos_get )"
-bxp_rootDir_bxo="$( bxp_rootDir_bxo_get )"
-bxp_rootDir_deRun="$( bxp_rootDir_deRun_get )"
-
-bxp_rootDir_provisioners="$( bxp_rootDir_provisioners_get )"
-
-
-#
-# pdb_ (Platform Dir Bases)
-#
-
-venvBasePy2="${bxp_rootDir_provisioners}/venv/py2"
-venvBasePy3="${bxp_rootDir_provisioners}/venv/py3"    
-
-pdb_bsipBase="${bxp_rootDir_bisos}/core/bsip"
-
-#
-# /bisos/venv/py2-bisos-3  /bisos/venv/py2/bisos3 /bisos/venv/dev/py2/bisos3
-# /bisos/venv/dev-py2-bisos-3
-#
-pdb_venv_py2Bisos3="${bxp_rootDir_bisos}/venv/py2-bisos-3"
-pdb_venv_py2Bisos3Dev="${bxp_rootDir_bisos}/venv/dev-py2-bisos-3"
-pdb_venv_py3Bisos3="${bxp_rootDir_bisos}/venv/py3-bisos-3"
-pdb_venv_py3Bisos3Dev="${bxp_rootDir_bisos}/venv/dev-py3-bisos-3"
-
-####+END
 
 currentUser=$(id -un)
 currentUserGroup=$(id -g -n ${currentUser})
@@ -168,6 +52,31 @@ if [ -f "${bx_platformInfoManage}" ] ; then
 fi
 
 
+function vis_provisioners_baseBisosPlatform {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo vis_pythonSysEnvPrepForVirtenvs
+
+    lpDo vis_updateAccts
+
+    lpDo vis_provisionersVenvPipInstalls
+
+    lpDo vis_bisosBaseDirsSetup   # NOTYET rename to provisionersBisosBaseDirsSetup
+
+    lpDo vis_provisionersGitReposAnonSetup
+
+    if [ -f "${bisosBsipProvisionerLib}" ] ; then
+	lpDo vis_bsipProvision_baseBisosPlatform
+    else
+	EH_problem "Missing ${bisosBsipProvisionerLib}"
+    fi
+}
+
+
 function provisionerBisosBinBaseGet {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -194,8 +103,8 @@ _EOF_
 
 provisionerBisosBinBaseGet="$( provisionerBisosBinBaseGet )"    
     
-#  /bisos/core/bsip/bin/bisosProvision_lib.sh
-bisosBsipProvisionerLib="${provisionerBisosBinBaseGet}/bisosProvision_lib.sh"
+#  /bisos/core/bsip/bin/bsipProvision_lib.sh
+bisosBsipProvisionerLib="${provisionerBisosBinBaseGet}/bsipProvision_lib.sh"
 
 if [ -f "${bisosBsipProvisionerLib}" ] ; then
     source "${provisionerBisosBinBaseGet}/platformBases_lib.sh"
@@ -253,37 +162,10 @@ ${provisionersBinBase}/bisosBaseDirsSetup.sh
 ${G_myName} ${extraInfo} -i provisionersGitReposAnonSetup   # Runs as sudo -u bisos 
 _EOF_
     
-    osmtTmpExamples "${extraInfo}"
-
     if [ -f "${bisosBsipProvisionerLib}" ] ; then
 	vis_bisosProvisionExamples "${extraInfo}"
-	echo "__________KKK________"
     fi
-
-
 }
-
-function osmtTmpExamples {
-   G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -eq 1 ]]
-    
-    local extraInfo="$1"
-    local provisionersBinBase="$( provisionersBinBaseGet )"
-
-    cat  << _EOF_    
-$( examplesSeperatorChapter "Temporary OSMT Setup" )
-$( examplesSeperatorSection "Run OSMT Genesis" )
-${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh
-${G_myName} ${extraInfo} -i osmtGenesis baseIoC
-${G_myName} ${extraInfo} -i osmtGenesis baseIoC atNeda
-$( examplesSeperatorChapter "BISOS Bases Administration (/bisos/core)" )
-$( examplesSeperatorSection "bisosBasesAdmin" )
-_EOF_
-}
-
 
 
 function vis_gitReposReport {
@@ -428,14 +310,14 @@ _EOF_
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
 	
-    # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosAccounts.sh
-    local bisosProg="${provisionersBinBase}/bisosAccounts.sh"
+    # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosGroupAccount.sh
+    local bisosProg="${provisionersBinBase}/bisosGroupAccount.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
 	EH_problem "Missing ${bisosProg}"
 	lpReturn 1
     else	
-    	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate passwd_tmpSame
+    	opDo "${bisosProg}" -h -v -n showRun -i bisosGroupAcctProvisionSetup
     fi
     
     lpReturn
@@ -531,34 +413,6 @@ _EOF_
     
     lpReturn
  }
-
-
-
-
-function vis_osmtGenesis {
-    G_funcEntry
-    function describeF {  G_funcEntryShow; cat  << _EOF_
-_EOF_
-    }
-    EH_assert [[ $# -ge 0 ]]
-
-    local icmArgs="$@"
-
-    local provisionersBinBase="$( provisionersBinBaseGet )"
-	
-    # /opt/bisosProvisioner/gitRepos/provisioners/bin/osmtBx2GenesisSelfcontained.sh
-    local bisosProg="${provisionersBinBase}/osmtBx2GenesisSelfcontained.sh"
-
-    if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else
-	osmtBx2GenesisSelfcontained.sh -h -v -n showRun -r basic -i baseIoC            # Blee + Ability To Import Io
-    	opDo sudo "${bisosProg}"  -h -v -n showRun -r basic -i $@
-    fi
-    
-    lpReturn
-}
 
 
 # Use the rest till /bisos/bsip/xx is in place,

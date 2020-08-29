@@ -63,6 +63,57 @@ ${G_myName} ${extraInfo} -i bisosGroupAcctDelete
 _EOF_
 }
 
+function vis_bisosGroupAcctProvisionExamples {
+    typeset extraInfo="-h -v -n showRun"
+    #typeset extraInfo=""
+    typeset runInfo="-p ri=lsipusr:passive"
+
+    typeset examplesInfo="${extraInfo} ${runInfo}"
+
+  cat  << _EOF_
+$( examplesSeperatorChapter "Provisioning Setups" )
+${G_myName}  -i bisosGroupAcctProvisionSetup   # Summary outputs
+${G_myName} ${extraInfo} -i bisosGroupAcctProvisionSetup    # Detailed outputs
+_EOF_
+}
+
+
+function vis_bisosGroupAcctProvisionSetup {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Creates bisos group and account at provisioning time.
+Repeatable: 
+	You can re-run this function multiple times.
+Actions:
+	1) Create the bisos group if it is not already in place.
+	2) Create the bisos account if it is not already in place.
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local bisosGroupName=$( vis_bisosGroup_bisosGroupName )
+    
+    if vis_bisosGroupVerify ; then
+	ANT_raw "${bisosGroupName} group is as expected -- group creation skipped."
+    else
+	lpDo vis_bisosGroupAdd
+    fi
+
+    local bisosGroupAcctName="$( vis_bisosAcct_bisosName )"
+
+    if vis_bisosGroupAcctVerify ; then
+	ANT_raw "${bisosGroupAcctName} account is as expected -- account creation skipped."
+    else
+	lpDo vis_bisosGroupAcctCreate
+    fi
+
+    opDo vis_userAcctsReport ${bisosGroupAcctName}    
+
+    lpReturn
+}
+
+
+
 function vis_bisosGroupVerify {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
