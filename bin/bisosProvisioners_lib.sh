@@ -11,11 +11,6 @@ source "${thisBashFileBaseDir}/platformBases_lib.sh"
 #  /bisos/core/bsip/bin/bsipProvision_lib.sh
 bisosBsipProvisionerLib="${pdb_bsip_bin}/bsipProvision_lib.sh"
 
-if [ -f "${bisosBsipProvisionerLib}" ] ; then
-    source "${pdb_bsip_bin}/platformBases_lib.sh"
-    source "${bisosBsipProvisionerLib}"
-fi
-
 
 function vis_provisioners_baseBisosPlatform {
     G_funcEntry
@@ -35,6 +30,7 @@ _EOF_
     lpDo vis_provisionersGitReposAnonSetup
 
     if [ -f "${bisosBsipProvisionerLib}" ] ; then
+	source "${bisosBsipProvisionerLib}"
 	lpDo vis_bsipProvision_baseBisosPlatform
     else
 	EH_problem "Missing ${bisosBsipProvisionerLib}"
