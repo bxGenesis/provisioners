@@ -71,7 +71,7 @@ function bxp_rootDir_bxo_get {
 }
 
 function bxp_rootDir_deRun_get {
-    local default="/de/run"
+    local default="/de"
     local outVal=$( bxp_platformInfoManageVarGet "rootDir_deRun" )
     if [ -z "${outVal}" ] ; then
 	outVal="${default}"
