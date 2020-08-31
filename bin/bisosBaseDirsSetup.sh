@@ -80,13 +80,9 @@ _EOF_
 # Import Libraries
 
 #
-. ${opLibBase}/pidLib.sh
-# # /opt/public/osmt/lib/portLib.sh
-. ${opLibBase}/portLib.sh
 
 . ${opBinBase}/sharedParameters_lib.sh
-. ${opBinBase}/bisosProvisioners_lib.sh
-
+. ${opBinBase}/bisosProvisioners_lib.sh  # in turn sources platformBases_lib.sh
 
 function G_postParamHook {
      return 0
@@ -152,12 +148,12 @@ _EOF_
 
     source ${py2ActivateFile}
 
-    if [ -z "${bisosUserName}" ] ; then
-	EH_problem "Missing bisosUserName"
+    if [ -z "${bxp_bisosUserName}" ] ; then
+	EH_problem "Missing bxp_bisosUserName"
 	lpReturn 101
     fi
 
-    if [ -z "${bisosGroupName}" ] ; then
+    if [ -z "${bxp_bisosGroupName}" ] ; then
 	EH_problem "Missing bisosGroupName"
 	lpReturn 101
     fi
@@ -165,12 +161,12 @@ _EOF_
     #local currentUser=$(id -un)
     #local currentUserGroup=$(id -g -n ${currentUser})
 
-    local currentUser="${bisosUserName}"
-    local currentUserGroup="${bisosGroupName}"
+    local currentUser="${bxp_bisosUserName}"
+    local currentUserGroup="${bxp_bisosGroupName}"
     
-    local bisosRootDir="${rootDir_bisos}"
-    local bxoRootDir="${rootDir_bxo}"
-    local deRunRootDir="${rootDir_deRun}"        
+    local bisosRootDir="${bxp_rootDir_bisos}"
+    local bxoRootDir="${bxp_rootDir_bxo}"
+    local deRunRootDir="${bxp_rootDir_deRun}"        
 
     # lpDo bx-platformInfoManage.py --bisosUserName="${currentUser}"  -i pkgInfoParsSet
     # lpDo bx-platformInfoManage.py --bisosGroupName="${currentUserGroup}"  -i pkgInfoParsSet     
@@ -217,9 +213,9 @@ _EOF_
 
     lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bleeRoot" -i pbdUpdate all    
 
-    lpDo bx-bases -v 20 --baseDir="${rootDir_deRun}" --pbdName="deRunRoot" -i pbdUpdate all
+    lpDo bx-bases -v 20 --baseDir="${bxp_rootDir_deRun}" --pbdName="deRunRoot" -i pbdUpdate all
 
-    lpDo bx-bases -v 20 --baseDir="${rootDir_bxo}" --pbdName="bxoRoot" -i pbdUpdate all
+    lpDo bx-bases -v 20 --baseDir="${bxp_rootDir_bxo}" --pbdName="bxoRoot" -i pbdUpdate all
 }
 
 
@@ -236,20 +232,20 @@ _EOF_
     # 
     #
 
-    if [ -z "${bisosUserName}" ] ; then
+    if [ -z "${bxp_bisosUserName}" ] ; then
 	EH_problem "Missing bisosUserName"
 	lpReturn 101
     fi
 
-    if [ -z "${bisosGroupName}" ] ; then
+    if [ -z "${bxp_bisosGroupName}" ] ; then
 	EH_problem "Missing bisosGroupName"
 	lpReturn 101
     fi
 
-    local currentUser="${bisosUserName}"
-    local currentUserGroup="${bisosGroupName}"
+    local currentUser="${bxp_bisosUserName}"
+    local currentUserGroup="${bxp_bisosGroupName}"
     
-    local bxGitReposBase="${rootDir_bisos}/git/anon"
+    local bxGitReposBase="${bxp_rootDir_bisos}/git/anon"
 
     lpDo sudo -H -u ${currentUser} ${G_myFullName} -h -v -n showRun -i bxGitReposBasesAnon "${bxGitReposBase}"
 }

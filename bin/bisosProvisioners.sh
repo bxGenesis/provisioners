@@ -60,7 +60,12 @@ _EOF_
     
     vis_provisionersExamples "${extraInfo}"
 
-    # osmtTmpExamples "${extraInfo}"    
+    cat  << _EOF_
+$( examplesSeperatorChapter "Base BISOS Platform:: Create the Base BISOS Platform" )
+${G_myName} ${extraInfo} -i baseBisosPlatform   # Primary Action -- runs from provisionersBin and from platfromBin
+${G_myName} ${extraInfo} -i miniBlee            # Primary Action
+${G_myName} ${extraInfo} -i miniBleeAtBase ${HOME}    # Primary Action
+_EOF_
 }
 
 noArgsHook() {
