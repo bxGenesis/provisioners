@@ -11,7 +11,7 @@
 #
 
 bxp_currentUser=$( id -un )
-bxp_currentUserGroup=$( id -g -n ${currentUser} )
+bxp_currentUserGroup=$( id -g -n ${bxp_currentUser} )
 
 bx_platformInfoManage=$( which -a bx-platformInfoManage.py | grep -v venv | head -1 )
 
