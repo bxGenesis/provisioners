@@ -34,7 +34,7 @@ _EOF_
 }
 
 function bxp_bisosUserName_get {
-    local default="/bisos"
+    local default="bisos"
     local outVal=$( bxp_platformInfoManageVarGet "bisosUserName" )
     if [ -z "${outVal}" ] ; then
 	outVal="${default}"
@@ -43,7 +43,7 @@ function bxp_bisosUserName_get {
 }
 
 function bxp_bisosGroupName_get {
-    local default="/bisos"
+    local default="bisos"
     local outVal=$( bxp_platformInfoManageVarGet "bisosGroupName" )
     if [ -z "${outVal}" ] ; then
 	outVal="${default}"
