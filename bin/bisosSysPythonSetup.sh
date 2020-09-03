@@ -222,6 +222,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    lpDo sudo apt-get install -y curl  # needed below
+    
     if which pip2 ; then
 	ANT_cooked "Pip2 already install -- Skipped"
     else
