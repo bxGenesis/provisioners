@@ -178,6 +178,10 @@ _EOF_
     ANT_raw "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
     lpDo bx-platformInfoManage.py -i pkgInfoParsGet
 
+    lpDo sudo mkdir "/var/bisos"
+    lpDo sudo chown ${currentUser}:${currentUserGroup} "/var/bisos"
+    lpDo sudo chmod 775 "/var/bisos"    
+    
     lpDo sudo mkdir -p "${bisosRootDir}"
     lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${bisosRootDir}"
 
