@@ -89,6 +89,7 @@ ${G_myName} ${extraInfo} -i provisionersGitReposAnonSetup   # Runs as sudo -u bi
 _EOF_
     
     if [ -f "${bisosBsipProvisionerLib}" ] ; then
+	source "${bisosBsipProvisionerLib}"	
 	vis_bisosProvisionExamples "${extraInfo}"
     fi
 }
