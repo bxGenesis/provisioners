@@ -12,7 +12,7 @@ source "${thisBashFileBaseDir}/platformBases_lib.sh"
 bisosBsipProvisionerLib="${pdb_bsip_bin}/bsipProvision_lib.sh"
 
 
-function vis_provisioners_baseBisosPlatform {
+function vis_provisioners_sysBasePlatform {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
