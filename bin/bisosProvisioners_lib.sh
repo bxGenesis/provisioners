@@ -31,7 +31,7 @@ _EOF_
 
     if [ -f "${bisosBsipProvisionerLib}" ] ; then
 	source "${bisosBsipProvisionerLib}"
-	lpDo vis_bsipProvision_baseBisosPlatform
+	lpDo vis_bsipProvision_sysBasePlatform
     else
 	EH_problem "Missing ${bisosBsipProvisionerLib}"
     fi
