@@ -265,13 +265,13 @@ _EOF_
 
     local baseDir=$1
 
-    local py2ActivateFile="${venvBasePy2}/bin/activate"
+    # local py2ActivateFile="${venvBasePy2}/bin/activate"
 
-    source ${py2ActivateFile}
+    # source ${py2ActivateFile}
     
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
-    lpDo bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode="anon"  -i pbdUpdate all    
+    lpDo ${venvBasePy2}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all    
+    lpDo ${venvBasePy2}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+    lpDo ${venvBasePy2}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode="anon"  -i pbdUpdate all    
 }
 
 
