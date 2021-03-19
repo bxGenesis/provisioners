@@ -227,7 +227,7 @@ _EOF_
     if which pip2 ; then
 	ANT_cooked "Pip2 already install -- Skipped"
     else
-	cd /tmp; curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
+	cd /tmp; curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
 	sudo python2 /tmp/get-pip.py
     fi
     
