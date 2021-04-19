@@ -181,7 +181,7 @@ _EOF_
     lpDo sudo mkdir "/var/bisos"
     lpDo sudo chown ${currentUser}:${currentUserGroup} "/var/bisos"
     lpDo sudo chmod 2775 "/var/bisos"
-    lpDO sudo setfacl -m "default:group::rwx" "/var/bisos"
+    lpDo sudo setfacl -m "default:group::rwx" "/var/bisos"
     
     lpDo sudo mkdir -p "${bisosRootDir}"
     lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${bisosRootDir}"
