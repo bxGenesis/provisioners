@@ -1,12 +1,12 @@
 #!/bin/bash # -*- mode: sh-mode; -*-
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IcmBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 
 ####+END:
 
@@ -43,6 +43,7 @@ function vis_bisosAcct_bisosName { echo bisos; }
 function vis_bisosAcct_bisosUid { echo 2000; }
 function vis_bisosAcct_bisosGid { vis_bisosGroup_bisosGid; }
 function vis_bisosAcct_bisosHome { echo "/bisos/groupAcct"; }
+function vis_bisosAcct_bisosUmask { echo 0002; }  # on ubuntu default is 0002 and on debian it is 0022
 
 function vis_bisosGroupExamples {
     typeset extraInfo="-h -v -n showRun"
@@ -224,6 +225,10 @@ _EOF_
    else
        opDo vis_bisosGroupAcctAdd
    fi
+
+   lpDo vis_acct_createHome "${acctName}"   #  is in ./unisosAccounts_lib.sh
+
+   lpDo vis_acct_umaskDotProfileEnsure "${acctName}" 0002  #  is in ./unisosAccounts_lib.sh
 
    opDo vis_sudoersAddLine "${acctName}" ALL NOPASSWD
 

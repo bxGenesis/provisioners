@@ -1,12 +1,12 @@
 #!/bin/bash # -*- mode: sh-mode; -*-
 
-IimBriefDescription="NOTYET: Short Description Of The Module"
+IcmBriefDescription="NOTYET: Short Description Of The Module"
 
 ORIGIN="
 * Revision And Libre-Halaal CopyLeft -- Part Of ByStar -- Best Used With Blee
 "
 
-####+BEGIN: bx:dblock:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
+####+BEGIN: bx:bash:top-of-file :vc "cvs" partof: "bystar" :copyleft "halaal+brief"
 
 ####+END:
 
@@ -33,7 +33,11 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-}
+			       }
+
+
+minUidSpec=1000
+maxUidSpec=20000
 
 function vis_unisosAccountsExamples {
     typeset extraInfo="-h -v -n showRun"
@@ -46,10 +50,11 @@ function vis_unisosAccountsExamples {
 $( examplesSeperatorChapter "Unisos User Accounts Management" )
 ${G_myName} -i uidSortPasswdFile
 ${G_myName} -i gidSortGroupFile
-${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
+${G_myName} -p uidMinSpec=2000 -p uidMaxSpec=5000 -i uidRangePasswdFile
+${G_myName} ${extraInfo} -i userAcctExists bystar ; echo \$?
 $( examplesSeperatorSection "Accounts Manipulation" )
-${G_myName} ${extraInfo} -i groupsExist bisos bystar lsipusr ; echo \$?
-${G_myName} ${extraInfo} -i userAcctsExist bisos bystar lsipusr ; echo \$?
+${G_myName} ${extraInfo} -i groupExists bystar ; echo \$?
+${G_myName} ${extraInfo} -i userAcctExists bystar ; echo \$?
 ${G_myName} ${extraInfo} -i userAcctsDelete bisos bystar ; echo \$?
 ${G_myName} ${extraInfo} -i groupsDelete bystar ; echo \$?
 $( examplesSeperatorChapter "General Purpose Accounts Processing Facilities" )
@@ -75,6 +80,124 @@ function vis_gidSortGroupFile {
 _EOF_
     }
     opDo eval sort -g -t : -k 3 /etc/group
+}
+
+function vis_uidRangePasswdFile {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+		       }
+
+    local passwdLines
+    local eachUid
+    local each
+
+    local sortedPasswd=$( sort -g -t : -k 3 /etc/passwd )
+
+    readarray passwdLines <<< ${sortedPasswd}
+    
+    for each in "${passwdLines[@]}" ; do
+	eachUid=$( echo ${each} | cut -d : -f 3 )
+	if (( eachUid >= uidMinSpec )) && (( eachUid < uidMaxSpec )) ; then
+	    echo -n "${each}"
+	fi
+    done
+}
+
+
+function vis_userHomeAcctsDelete {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete specified user home directory.
+Design Pattern: processEach based on args or stdin.
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local userAcctName=$1
+	if ! vis_userAcctExists ${userAcctName} ; then
+	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+	    lpReturn 101
+	fi
+	local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
+	
+	lpDo sudo rm -r ${userAcctHome}
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    lpReturn
+}
+
+
+function vis_userHomeAcctsDefunct {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Delete specified user home directory.
+Design Pattern: processEach based on args or stdin.
+_EOF_
+    }
+
+    local inputsList="$@"
+    local thisFunc=${G_thisFunc}
+
+    function processEach {
+	EH_assert [[ $# -eq 1 ]]
+	local userAcctName=$1
+	if ! vis_userAcctExists ${userAcctName} ; then
+	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+	    lpReturn 101
+	fi
+	local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
+	
+	lpDo sudo mv ${userAcctHome} ${userAcctHome}.defunct
+	lpDo sudo chmod 000 ${userAcctHome}.defunct
+    }
+
+####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
+    if [ $# -gt 0 ] ; then
+	local each=""
+	for each in ${inputsList} ; do
+	    lpDo processEach ${each}
+	done
+    else
+	local eachLine=""
+	while read -r -t 1 eachLine ; do
+	    if [ ! -z "${eachLine}" ] ; then
+		local each=""
+		for each in ${eachLine} ; do
+		    lpDo processEach ${each}
+		done
+	    fi
+	done
+    fi
+
+####+END:
+    
+    
+    lpReturn
 }
 
 
@@ -129,6 +252,7 @@ function vis_groupsAdd {
 Add specified groups.
 Design Pattern: processEach based on args or stdin.
 Runs groupadd as root.
+** TODO Modernize processEachArgsOrStdin to processEachArgsAndStdin
 _EOF_
     }
 
@@ -332,6 +456,17 @@ _EOF_
     forAcctNameGetFieldNu $1 3
 }
 
+function vis_forAcctNameGetHome {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+For acctName return home -- the 6th field.
+_EOF_
+		       }
+    EH_assert [[ $# -eq 1 ]]
+
+    forAcctNameGetFieldNu $1 6
+}
+
 
 function forAcctNameGetFieldNu {
     G_funcEntry
@@ -510,6 +645,92 @@ _EOF_
     exitCode=$?
 
     lpReturn ${exitCode}
+}
+
+
+function vis_acct_createHome {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Create home dir for specified acct -- acctHome is taken from passwd entry.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local acctName="$1"
+
+    local getentStr=$( getent passwd ${acctName} )
+    
+    if [ -z "${getentStr}" ] ; then
+	EH_problem "Missing acct -- ${acctName}"
+	lpReturn 101
+    fi
+    
+    local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
+    local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
+    local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
+
+    lpDo sudo mkdir "${getentAcctHome}"
+    lpDo sudo chown ${getentAcctUid}:${getentAcctGid} "${getentAcctHome}"
+
+    # NOTYET, Perhaps we need a feature to tighten this 
+    lpDo sudo chmod g+w "${getentAcctHome}"
+
+    lpReturn
+}
+
+
+function vis_acct_umaskDotProfileEnsure {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+** Ensure that for umask is properly set in ~\${acctName}/.profile. Create .profile if needed.
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local acctName="$1"
+    local umaskValue="$2"
+
+    if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;        
+
+    local getentStr=$( getent passwd ${acctName} )
+    
+    if [ -z "${getentStr}" ] ; then
+	EH_problem "Missing acct -- ${acctName}"
+	lpReturn 101
+    fi
+
+    local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
+    local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
+    local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
+
+    EH_assert [ -d "${getentAcctHome}" ]
+
+    local dotProfilePath="${getentAcctHome}/.profile"
+
+    local effectiveUmask=$(umask)
+    local filePermsOfUmaskValue=$( umask -S ${umaskValue} | sed -e s/x//g -e s/=/+/g )
+    
+    umask ${effectiveUmask}
+
+    if [ ! -e "${dotProfilePath}" ] ; then
+	lpDo eval cat  << _EOF_  \> "${dotProfilePath}"
+#
+umask ${umaskValue}
+_EOF_
+	lpDo chown ${getentAcctUid}:${getentAcctGid} "${dotProfilePath}"
+	lpDo chmod ${filePermsOfUmaskValue} "${dotProfilePath}"
+    else
+	if grep "umask ${umaskValue}" "${dotProfilePath}" ; then
+	    ANT_raw "umask is already properly set"
+	else
+	    lpDo eval cat  << _EOF_  \>\> "${dotProfilePath}"
+#
+umask ${umaskValue}
+_EOF_
+	fi
+    fi
+
+    lpReturn
 }
 
 
