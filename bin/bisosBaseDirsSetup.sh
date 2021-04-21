@@ -190,10 +190,14 @@ _EOF_
    
     lpDo sudo mkdir -p "${bxoRootDir}"
     lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${bxoRootDir}"
-
+    lpDo sudo chmod 2775 "${bxoRootDir}"
+    lpDo sudo setfacl -m "default:group::rwx" "${bxoRootDir}"
+    
     lpDo sudo mkdir -p "${deRunRootDir}"
     lpDo sudo chown -R ${currentUser}:${currentUserGroup} "${deRunRootDir}"
-    
+    lpDo sudo chmod 2775 "${deRunRootDir}"
+    lpDo sudo setfacl -m "default:group::rwx" "${deRunRootDir}"
+
     #
     # With the above rootDirs in place, bx-bases need not do any sudo-s
     #
