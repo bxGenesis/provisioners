@@ -669,7 +669,7 @@ _EOF_
     local getentAcctGid=$( echo ${getentStr} | cut -d : -f 4 )
     local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
 
-    lpDo sudo mkdir "${getentAcctHome}"
+    lpDo sudo mkdir -p "${getentAcctHome}"
     lpDo sudo chown ${getentAcctUid}:${getentAcctGid} "${getentAcctHome}"
 
     # NOTYET, Perhaps we need a feature to tighten this 
