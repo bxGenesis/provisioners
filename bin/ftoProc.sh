@@ -11,7 +11,7 @@ __copying__="
 
 ####+END:
 
-####+BEGIN: bx:bsip:bash:seed-spec :types  "seedFtoCommon.sh"
+####+BEGIN: bx:bsip:bash:seed-spec :types "seedFtoCommon.sh"
 SEED="
 *  /[dblock]/ /Seed/ :: [[file:/bisos/core/bsip/bin/seedFtoCommon.sh]] | 
 "
@@ -25,6 +25,55 @@ fi
 ####+END:
 
 
+leavesExcludes=""
+
+leavesOrdered=""
+
+nodesExcludes=""
+
+nodesOrdered=""
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || List       ::  Leaves List    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+####+BEGIN: bx:dblock:ploneProc:bash:leavesList :types ""
+# {{{ DBLOCK-leavesList
+leavesList="
+"
+# }}} DBLOCK-leavesList
+####+END:
+
+
+_CommentBegin_
+*  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || List       ::  Nodes List    [[elisp:(org-cycle)][| ]]
+_CommentEnd_
+
+#
+# For now ftoWalk is restricted to
+#
+
+####+BEGIN: bx:dblock:ploneProc:bash:nodesList :types ""
+# {{{ DBLOCK-nodesList
+nodesList="
+"
+# }}} DBLOCK-nodesList
+####+END:
+
+####+BEGINNOT: bx:dblock:ploneProc:bash:nodesList :types ""
+# {{{ DBLOCK-nodesList
+nodesListPips="
+blee-pip
+unisos-pip
+roPerf-pip
+bisos-pip
+"
+# }}} DBLOCK-nodesList
+####+END:
+
+
+
 _CommentBegin_
 *  [[elisp:(org-cycle)][| ]]  [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(beginning-of-buffer)][Top]] [[elisp:(delete-other-windows)][(1)]] || Cmnd       ::  examplesHookPostExample    [[elisp:(org-cycle)][| ]]
 _CommentEnd_
@@ -32,17 +81,81 @@ _CommentEnd_
 function examplesHookPost {
     cat  << _EOF_
 $( examplesSeperatorTopLabel "EXTENSION EXAMPLES" )
-$( examplesSeperatorSection "commonProc.sh -- Templates Evolution" )
-diff ./commonProc.sh  /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/commonProcLeaf.sh
-cp  ./commonProc.sh  /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/commonProcLeaf.sh
-cp /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/commonProcLeaf.sh ./commonProc.sh  
-$( examplesSeperatorSection "commonPanel.org -- Templates Evolution" )
-diff ./commonPanel.org  /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/commonPanel.org
-cp ./commonPanel.org /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/commonPanel.org
-cp /libre/ByStar/InitialTemplates/start/fto/commonProc/anyFtoItem/commonPanel.org ./commonPanel.org
+_EOF_
+
+    pypiFtpWalks
+
+    templatesEvolution
+    
+    return
+}
+
+
+function pypiFtpWalks {
+    local pypiProcStartTemplate="/bisos/apps/defaults/software/starts/pypiProc.sh"
+    local ftoProcNodeStartTemplate="/bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh"
+    
+    cat  << _EOF_
+$( examplesSeperatorChapter "ftpWalks: Uninstall" )
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -i pkgUnInstall sys
+$( examplesSeperatorChapter "PyPi AuxNode ftpWalks" )
+ftoProc.sh -v -n showRun -i treeRecurse runFunc pypiProc.sh -i distClean
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -i distClean
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -i pkgInstall edit /bisos/venv/dev-py2-bisos-3
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd pypiProc.sh -i pkgInstall edit sys
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd icmPlayer.sh -i clean ftoProc.sh pypiProc.sh
+ftoProc.sh -v -n showRun -i ftoWalkRunCmnd icmPlayer.sh -i pkgedPrep ftoProc.sh pypiProc.sh
+$( examplesSeperatorChapter "Under Files Update" )
+ftoProc.sh -v -n showRun -i updateUnderFilesTo  ${ftoProcNodeStartTemplate} ftoProc.sh
+ftoProc.sh -v -n showRun -i updateUnderFilesTo  ${pypiProcStartTemplate} pypiProc.sh 
 _EOF_
  return
 }
+
+
+function templatesEvolution {
+    local ftoProcNodeStartTemplate="/bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/ftoProcNode.sh"
+    local panelStartTemplate="/bisos/apps/defaults/update/fto/start/commonProc/anyFtoItem/mainPanel.org"
+    
+    cat  << _EOF_
+$( examplesSeperatorSection "ftoProc.sh -- Templates Evolution" )
+diff ./ftoProc.sh ${ftoProcNodeStartTemplate}
+cp ./ftoProc.sh ${ftoProcNodeStartTemplate}
+cp ${ftoProcNodeStartTemplate} ./ftoProc.sh  
+$( examplesSeperatorSection "commonPanel.org -- Templates Evolution" )
+diff ./Panel.org  ${panelStartTemplate}
+cp ./Panel.org ${panelStartTemplate}
+cp ${panelStartTemplate} ./Panel.org
+_EOF_
+ return
+}
+
+
+function vis_updateUnderFilesTo {
+    G_funcEntry
+    function describeF {  cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 2 ]]
+
+    local updateToFile="$1"        
+    local underFilesName="$2"
+
+    if [ ! -f "${updateToFile}" ] ; then
+	EH_problem "Bad Usage Missing ${updateToFile}"
+	lpReturn
+    fi
+
+    local underFilesList=$(find . -type f -print | egrep "/${underFilesName}"'$')
+
+    for each in ${underFilesList} ; do
+	opDo cp ${updateToFile} ${each} 
+	opDo bx-dblock -i dblockUpdateFile ${each}
+    done
+
+    lpReturn
+}
+
 
 
 ####+BEGIN: bx:dblock:bash:end-of-file :types ""
@@ -55,4 +168,3 @@ _CommentEnd_
 #fill-column: 90
 # end:
 ####+END:
-
