@@ -84,10 +84,10 @@ function vis_bisosGroupAcctProvisionSetup {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Creates bisos group and account at provisioning time.
 Repeatable: 
-	You can re-run this function multiple times.
+        You can re-run this function multiple times.
 Actions:
-	1) Create the bisos group if it is not already in place.
-	2) Create the bisos account if it is not already in place.
+        1) Create the bisos group if it is not already in place.
+        2) Create the bisos account if it is not already in place.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
@@ -95,17 +95,17 @@ _EOF_
     local bisosGroupName=$( vis_bisosGroup_bisosGroupName )
     
     if vis_bisosGroupVerify ; then
-	ANT_raw "${bisosGroupName} group is as expected -- group creation skipped."
+        ANT_raw "${bisosGroupName} group is as expected -- group creation skipped."
     else
-	lpDo vis_bisosGroupAdd
+        lpDo vis_bisosGroupAdd
     fi
 
     local bisosGroupAcctName="$( vis_bisosAcct_bisosName )"
 
     if vis_bisosGroupAcctVerify ; then
-	ANT_raw "${bisosGroupAcctName} account is as expected -- account creation skipped."
+        ANT_raw "${bisosGroupAcctName} account is as expected -- account creation skipped."
     else
-	lpDo vis_bisosGroupAcctCreate
+        lpDo vis_bisosGroupAcctCreate
     fi
 
     opDo vis_userAcctsReport ${bisosGroupAcctName}    
@@ -182,13 +182,13 @@ _EOF_
     local acctHome="$( vis_bisosAcct_bisosHome )"    
 
     if ! vis_userAcctExists "${acctName}" ; then
-	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
-	lpReturn 101
+        ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+        lpReturn 101
     fi
     
     if ! vis_bisosGroupVerify ; then
-	EH_problem "${acctGid} group is missing or misconfigured -- Re-run bisosGroupAdd"
-	lpReturn 101
+        EH_problem "${acctGid} group is missing or misconfigured -- Re-run bisosGroupAdd"
+        lpReturn 101
     fi
 
     lpDo vis_accountVerify ${acctName} ${acctUid} ${acctGid} ${acctHome}
@@ -208,8 +208,8 @@ _EOF_
 
    if vis_groupExists ${acctGid} ; then    
        if ! vis_bisosGroupVerify ; then
-	   EH_problem "${acctGid} group is missing or misconfigured -- Re-run bisosGroupAdd"
-	   lpReturn 101
+           EH_problem "${acctGid} group is missing or misconfigured -- Re-run bisosGroupAdd"
+           lpReturn 101
        fi
    else
        opDo vis_bisosGroupAdd
@@ -217,10 +217,10 @@ _EOF_
 
    if vis_userAcctExists "${acctName}" ; then
        if vis_bisosGroupAcctVerify ; then
-	   ANT_raw "${acctName} exists and is properly configured. It will be used"
+           ANT_raw "${acctName} exists and is properly configured. It will be used"
        else
-	   EH_problem "${acctName} account is misconfigured"
-	   lpReturn 101
+           EH_problem "${acctName} account is misconfigured"
+           lpReturn 101
        fi
    else
        opDo vis_bisosGroupAcctAdd
@@ -256,19 +256,19 @@ _EOF_
     if vis_reRunAsRoot ${G_thisFunc} $@ ; then lpReturn ${globalReRunRetVal}; fi;
 
     if vis_userAcctExists "${acctName}" ; then
-	EH_problem "${acctName} Already Exists -- Addition Skipped"
-	lpReturn 101
+        EH_problem "${acctName} Already Exists -- Addition Skipped"
+        lpReturn 101
     fi
 
     lpDo useradd \
-	 --uid "${acctUid}" \
-	 --gid "${acctGid}" \
-	 --groups "${supplementaryGroups}" \
-	 --shell /usr/sbin/nologin \
-	 --no-create-home \
-	 --home-dir "${acctHome}" \
-	 --comment "${acctComment}" \
-	 ${acctName}
+         --uid "${acctUid}" \
+         --gid "${acctGid}" \
+         --groups "${supplementaryGroups}" \
+         --shell /usr/sbin/nologin \
+         --no-create-home \
+         --home-dir "${acctHome}" \
+         --comment "${acctComment}" \
+         ${acctName}
 
     lpReturn
 }

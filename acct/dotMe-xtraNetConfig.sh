@@ -14,7 +14,7 @@ function flist {
 
 function extraNetActivate {
     if [ $# == 1 ] ; then
-        echo $1 >  $HOME/extraNetUserPasswd	
+        echo $1 >  $HOME/extraNetUserPasswd     
     fi
 
     #
@@ -28,13 +28,13 @@ function extraNetActivate {
     #
     echo "Invoking: $HOME/gitSetup.sh"
     if [ -f "$HOME/gitSetup.sh" ] ; then
-	$HOME/gitSetup.sh
+        $HOME/gitSetup.sh
     elif [ -f "./gitSetup.sh" ] ; then
-	./gitSetup.sh
+        ./gitSetup.sh
     else
-	echo "Missing gitSetup.sh -- Skipped"
+        echo "Missing gitSetup.sh -- Skipped"
     fi
-	
+        
 
     #
     # PIP Setup
@@ -42,9 +42,9 @@ function extraNetActivate {
     echo "Invoking: source $HOME/pip/dotMe-PIP-CONFIG-FILE"
 
     if [ -f "$HOME/pip/dotMe-PIP-CONFIG-FILE" ] ; then
-	. $HOME/pip/dotMe-PIP-CONFIG-FILE	
+        . $HOME/pip/dotMe-PIP-CONFIG-FILE       
     else
-	echo "Missing $HOME/pip/dotMe-PIP-CONFIG-FILE -- Skipped"
+        echo "Missing $HOME/pip/dotMe-PIP-CONFIG-FILE -- Skipped"
     fi
     
 
@@ -92,7 +92,7 @@ function extraNetReport {
 
     echo "=======================GIT REPORT -- Begin ======================="    
     git --no-pager config --list
-    ls -l $HOME/.gitconfig	
+    ls -l $HOME/.gitconfig      
     echo "=======================GIT REPORT -- End   ======================="
     echo ""
 
@@ -106,7 +106,7 @@ function extraNetReport {
 
 function extraNetUserPasswdSet {
     if [ $# != 4 ] ; then
-	echo "E: Expected two args -- extraNetuserName extraNetuserPasswd userName userEmail"
+        echo "E: Expected two args -- extraNetuserName extraNetuserPasswd userName userEmail"
     fi
     echo "$1" > $HOME/extraNetUserName
     echo "$2" >  $HOME/extraNetUserPasswd
@@ -123,7 +123,7 @@ function extraNetUserPasswdDelete {
 
 function extraNetPasswdSet {
     if [ $# != 1 ] ; then
-	echo "E: Expected one arg -- userPasswd"
+        echo "E: Expected one arg -- userPasswd"
     fi
     echo $1 >  $HOME/extraNetUserPasswd
 }
@@ -146,12 +146,12 @@ function extraNetProxyOn {
     local userPasswd=""
 
     if [ ! -f "$HOME/extraNetUserName" ] ; then
-	echo "E: Missing $HOME/extraNetUserName -- Aborting"
-	return
+        echo "E: Missing $HOME/extraNetUserName -- Aborting"
+        return
     fi
     if [ ! -f "$HOME/extraNetUserPasswd" ] ; then
-	echo "E: Missing $HOME/extraNetUserPasswd -- Aborting"
-	return
+        echo "E: Missing $HOME/extraNetUserPasswd -- Aborting"
+        return
     fi
 
     userName=$( cat $HOME/extraNetUserName )

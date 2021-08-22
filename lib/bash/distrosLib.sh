@@ -27,7 +27,7 @@ _EOF_
     eval echo ${distroId}
 
     lpReturn
-}	
+}       
 
 
 function distro_versionId {
@@ -42,7 +42,7 @@ _EOF_
     eval echo ${distroVersionId}
 
     lpReturn
-}	
+}       
 
 function distro_familyId {
    G_funcEntry
@@ -56,7 +56,7 @@ _EOF_
     eval echo ${distroFamilyId}
 
     lpReturn
-}	
+}       
 
 
 

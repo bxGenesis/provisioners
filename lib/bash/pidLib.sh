@@ -22,7 +22,7 @@ _EOF_
     echo ${cmndLine}
 
     lpReturn
-}	
+}       
 
 
 function forPidGetCwd {
@@ -40,7 +40,7 @@ _EOF_
     # pwdx ${pid}
 
     lpReturn
-}	
+}       
 
 
 ####+BEGIN: bx:dblock:bash:end-of-file :type "basic"

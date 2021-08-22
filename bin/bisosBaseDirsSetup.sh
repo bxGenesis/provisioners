@@ -75,7 +75,7 @@ Based on these we now:
 - Brings platform to minimum bisos level
 
 _EOF_
-		      }
+                      }
 
 # Import Libraries
 
@@ -124,7 +124,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ "$( type -t deactivate )" == "function" ] ; then
-	deactivate
+        deactivate
     fi
 
 }
@@ -149,13 +149,13 @@ _EOF_
     source ${py2ActivateFile}
 
     if [ -z "${bxp_bisosUserName}" ] ; then
-	EH_problem "Missing bxp_bisosUserName"
-	lpReturn 101
+        EH_problem "Missing bxp_bisosUserName"
+        lpReturn 101
     fi
 
     if [ -z "${bxp_bisosGroupName}" ] ; then
-	EH_problem "Missing bisosGroupName"
-	lpReturn 101
+        EH_problem "Missing bisosGroupName"
+        lpReturn 101
     fi
 
     #local currentUser=$(id -un)
@@ -244,13 +244,13 @@ _EOF_
     #
 
     if [ -z "${bxp_bisosUserName}" ] ; then
-	EH_problem "Missing bisosUserName"
-	lpReturn 101
+        EH_problem "Missing bisosUserName"
+        lpReturn 101
     fi
 
     if [ -z "${bxp_bisosGroupName}" ] ; then
-	EH_problem "Missing bisosGroupName"
-	lpReturn 101
+        EH_problem "Missing bisosGroupName"
+        lpReturn 101
     fi
 
     local currentUser="${bxp_bisosUserName}"
@@ -366,10 +366,10 @@ _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
 
-    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
+    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;    
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -387,7 +387,7 @@ _EOF_
     opDo sudo apt-get install -y python3
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -405,7 +405,7 @@ _EOF_
     opDo sudo apt-get install -y python2
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -423,7 +423,7 @@ _EOF_
     opDo sudo apt-get install -y pip3
 
     lpReturn
-}	
+}       
 
 
 
@@ -443,7 +443,7 @@ _EOF_
     # sudo python2 /tmp/get-pip.py
 
     lpReturn
-}	
+}       
 
 
 
@@ -466,7 +466,7 @@ _EOF_
     # which -a bx-platformInfoManage.py
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -488,7 +488,7 @@ _EOF_
     # which -a bx-platformInfoManage.py
 
     lpReturn
-}	
+}       
 
 
 
@@ -511,7 +511,7 @@ _EOF_
     # which -a bx-platformInfoManage.py
 
     lpReturn
-}	
+}       
 
 
 
@@ -534,7 +534,7 @@ _EOF_
     # which -a bx-platformInfoManage.py
 
     lpReturn
-}	
+}       
 
 
 

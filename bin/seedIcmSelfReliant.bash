@@ -78,7 +78,7 @@ function _opDoRunOnly {
     if [[ $err -ne 0 ]] ; then
       EH_problem "$failedMsg" "$err"
       if [[ "${mode}X" == "EXITX" ]] ; then
-	exit $err
+        exit $err
       fi
       return $err
     fi
@@ -92,10 +92,10 @@ function _opDoShowOnly {
   # $3: failed msg
   # $4-: command
     if [[ "${BASH_VERSION}" != "" ]] ; then
-	#echo -e ${2} 1>&2
-	printf "%b \n" "${2}"
+        #echo -e ${2} 1>&2
+        printf "%b \n" "${2}"
     else
-	print -u2 "${2}"
+        print -u2 "${2}"
     fi
 }
 
@@ -140,92 +140,92 @@ function _opDo {
     typeset mode="$1"; shift || exit
 
     if [[ -z "${__opDo_prevScriptName}" ]] ; then
-	export __opDo_prevScriptName=""
+        export __opDo_prevScriptName=""
     fi
     if [[ -z "${__opDo_prevFunctionName}" ]] ; then
-	export __opDo_prevFunctionName=""
+        export __opDo_prevFunctionName=""
     fi
     if [[ "${__opDo_prevScriptName}X" == "${scriptName}X" ]] ; then
-	scriptName=""
+        scriptName=""
     else
-	__opDo_prevScriptName="${scriptName}"
-	scriptName="${scriptName}::"
+        __opDo_prevScriptName="${scriptName}"
+        scriptName="${scriptName}::"
     fi
     if [[ "${__opDo_prevFunctionName}" == "${functionName}" ]] ; then
-	functionName=""
+        functionName=""
     else
-	__opDo_prevFunctionName="${functionName}"
+        __opDo_prevFunctionName="${functionName}"
     fi
     
     if [ -z "${G_recordMode}" ] ; then
-	lineNumberTag="** [${lineNumber}]"
+        lineNumberTag="** [${lineNumber}]"
     else
-	lineNumberTag="** [[file:${G_myFullName}::${lineNumber}][${lineNumber}]]"	
+        lineNumberTag="** [[file:${G_myFullName}::${lineNumber}][${lineNumber}]]"       
     fi
 
     if [ -z "${G_recordMode}" ] ; then
-	scriptFuncName="* ${scriptName}${functionName}"	
+        scriptFuncName="* ${scriptName}${functionName}" 
     else
-	scriptFuncName="* [[file:${G_myFullName}::function ${functionName}][${scriptName}${functionName}]]"		
+        scriptFuncName="* [[file:${G_myFullName}::function ${functionName}][${scriptName}${functionName}]]"             
     fi
 
     typeset msg
     typeset failedMsg
     dateTag=$( date +%Y%m%d%H%M%S%N )
     case "${G_verbose}" in
-	"verbose")
-	    if [ "${scriptName}" == "" ] ; then
-		if [ "${functionName}" == "" ] ; then
-		   msg="${lineNumberTag}: $@"
-		else
-		    #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-		    msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"
-		fi 
-	    else
-		#msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
-		msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"		
-	    fi
-	    failedMsg="FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
-	    ;;
-	*)
-	    msg="$@"
-	    failedMsg="FAILED: $@ [ErrCode]="
-	    ;;
+        "verbose")
+            if [ "${scriptName}" == "" ] ; then
+                if [ "${functionName}" == "" ] ; then
+                   msg="${lineNumberTag}: $@"
+                else
+                    #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
+                    msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"
+                fi 
+            else
+                #msg="* ${scriptName}${functionName} -- ${dateTag}\n${lineNumber}: $@"
+                msg="${scriptFuncName} -- ${dateTag}\n${lineNumberTag}: $@"             
+            fi
+            failedMsg="FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
+            ;;
+        *)
+            msg="$@"
+            failedMsg="FAILED: $@ [ErrCode]="
+            ;;
     esac
     case "${G_runMode}" in
-	"runOnly")
-	    _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return $?
-	    ;;
-	"showOnly")
-	    _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    ;;
-	"showRun")
-	    _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    ;;
-	"runSafe")
-	    #runSafe = unprotected: showRun, protected: show
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
-	"showCritical"|"showProtected")
-	    #showCritical    = unprotected: run,     protected: show
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
-	"showRunCritical"|"showRunProtected")
-	    #showRunCritical = unprotected: run,     protected: showRun 
-	    if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
-		_opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
-	    else
-		_opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
-	    fi
-	    ;;
+        "runOnly")
+            _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return $?
+            ;;
+        "showOnly")
+            _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            ;;
+        "showRun")
+            _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            ;;
+        "runSafe")
+            #runSafe = unprotected: showRun, protected: show
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
+        "showCritical"|"showProtected")
+            #showCritical    = unprotected: run,     protected: show
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
+        "showRunCritical"|"showRunProtected")
+            #showRunCritical = unprotected: run,     protected: showRun 
+            if [[ ${__opDo_withinCritical} -eq 0 ]] ; then
+                _opDoRunOnly "$mode" "$msg" "$failedMsg" "$@" || return
+            else
+                _opDoShowRun "$mode" "$msg" "$failedMsg" "$@" || return
+            fi
+            ;;
     esac
     return $err
 }
@@ -240,8 +240,8 @@ function _opDoAssert {
     typeset failedMsg="ASSERTION FAILED: ${scriptName}${functionName}${lineNumber}: $@ [ErrCode]="
     "$@" || err=$?
     if [[ $err -ne 0 ]] ; then
-	EH_problem "$failedMsg" "$err"
-	exit $err
+        EH_problem "$failedMsg" "$err"
+        exit $err
     fi
 }
 
@@ -285,15 +285,15 @@ function vis_reRunAsRoot {
 
     runId=$( id -u )
     if [ "${runId}" != "0" ] ; then
-	#ANT_raw "Re Invokation as root:"
-	#opDo sudo ${opBinBase}/${G_myName} -i runFunc $@
-	#export G_runMode="runOnly"
-	opDo sudo ${G_myFullName} ${G_commandOptions} -i runFunc $@
-	globalReRunRetVal=$?
-	#ANT_raw retVal=${globalReRunRetVal}
-	lpReturn 0
+        #ANT_raw "Re Invokation as root:"
+        #opDo sudo ${opBinBase}/${G_myName} -i runFunc $@
+        #export G_runMode="runOnly"
+        opDo sudo ${G_myFullName} ${G_commandOptions} -i runFunc $@
+        globalReRunRetVal=$?
+        #ANT_raw retVal=${globalReRunRetVal}
+        lpReturn 0
     else
-	lpReturn 127
+        lpReturn 127
     fi
 }
 
@@ -333,28 +333,28 @@ alias continueAfterThis='_continueAfterThis; if [[ ${skipIt} == "true" ]] ; then
 function _continueAfterThis {
     #echo "About to: $*"
     if [ ${G_humanUser} != "TRUE" ] ; then
-	return
+        return
     fi
     echo -n "Hit enter to continue, \"skip\" to skip or \"EXIT\" to exit: "
     skipIt=false
     while read line ; do
-	if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
-	echo "Skiped"
-	    skipIt=true
-	    break
-	fi
+        if [[ "${line}_" == "SKIP_"  || "${line}_" == "skip_" ]] ; then
+        echo "Skiped"
+            skipIt=true
+            break
+        fi
 
-	if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
-	    exit
-	fi
+        if [[ "${line}_" == "EXIT_"  || "${line}_" == "exit_" ]] ; then
+            exit
+        fi
 
-	if [[ "${line}_" == "_" ]] ; then
-	    #echo "Continuing ...."
-	    break
-	fi
+        if [[ "${line}_" == "_" ]] ; then
+            #echo "Continuing ...."
+            break
+        fi
 
-	echo "HA! ${line} -- Say Again"
-	echo -n "Hit enter to continue, \"skip\" to skip or \"EXIT\" to exit: "
+        echo "HA! ${line} -- Say Again"
+        echo -n "Hit enter to continue, \"skip\" to skip or \"EXIT\" to exit: "
     done
 }
 
@@ -545,16 +545,16 @@ Tracing
 
             Trace Number Conventions:
 
-	    0: No Tracing
-	    1: Application Basic Info
-	    2: Application General Info
-	    3: Application Function Entry and Exit
-    	    4: Application Debugging
-	    5: Wrappers Library
-	    6: Seed Script
-	    7: Seed Supporting Libraries (eg, doLib.sh)
-	    8: ocp_library
-	    9: Quick Debug, usually temporary
+            0: No Tracing
+            1: Application Basic Info
+            2: Application General Info
+            3: Application Function Entry and Exit
+            4: Application Debugging
+            5: Wrappers Library
+            6: Seed Script
+            7: Seed Supporting Libraries (eg, doLib.sh)
+            8: ocp_library
+            9: Quick Debug, usually temporary
 
 Run Mode:
 =========
@@ -672,9 +672,9 @@ function ANV_raw {
 function ant_cooked {
     #print -u2 -r -- "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*"
     if [ -z "${G_recordMode}" ] ; then
-	printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
+        printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
     else
-	printf  1>&2 "** NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
+        printf  1>&2 "** NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
     fi
 }
 
@@ -682,9 +682,9 @@ function anv_cooked {
   if [[ "${G_verbose}_" == "verbose_" ]] ; then
       #print -u2 -r -- "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*"
     if [ -z "${G_recordMode}" ] ; then
-	printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
+        printf  1>&2 "NOTE,${G_myName},${tm_fileName},${tm_lineNo}: $*\n"  
     else
-	printf  1>&2 "** [[file:${G_myFullName}::${tm_lineNo}][inBaseDirDo]] $*\n"  
+        printf  1>&2 "** [[file:${G_myFullName}::${tm_lineNo}][inBaseDirDo]] $*\n"  
     fi
   fi
 }
@@ -716,7 +716,7 @@ function lpSilentPopd {
 function lpPushd {                                                                   
     if (("$#" > 0)); then
         pushd "$@" > /dev/null
-	ANV_cooked "Pushded to $( pwd )"
+        ANV_cooked "Pushded to $( pwd )"
     else
         cd $HOME
     fi
@@ -724,7 +724,7 @@ function lpPushd {
 
 function lpPopd {                                                                   
         popd "$@" > /dev/null
-	ANV_cooked "Popded to $( pwd )"
+        ANV_cooked "Popded to $( pwd )"
 }
 
 
@@ -749,19 +749,19 @@ _EOF_
     typeset doCommand=$@
 
     if [ -d ${baseDir} ] ;  then
-	lpSilentPushd ${baseDir}
-	if [ -z "${G_recordMode}" ] ; then
-	    #printf  1>&2 "Misiing ** -- In $( pwd ) Running: ${doCommand}\n"  
-	    ANV_cooked "In $( pwd ) Running: ${doCommand}"	    
-	else
-	    #printf  1>&2 "NOT Missing ** -- In $( pwd ) Running: ${doCommand}\n"  	    
-	    ANV_cooked "In $( pwd ) Running: ${doCommand}"	    
-	fi
-	${doCommand}
-	lpSilentPopd > /dev/null
+        lpSilentPushd ${baseDir}
+        if [ -z "${G_recordMode}" ] ; then
+            #printf  1>&2 "Misiing ** -- In $( pwd ) Running: ${doCommand}\n"  
+            ANV_cooked "In $( pwd ) Running: ${doCommand}"          
+        else
+            #printf  1>&2 "NOT Missing ** -- In $( pwd ) Running: ${doCommand}\n"           
+            ANV_cooked "In $( pwd ) Running: ${doCommand}"          
+        fi
+        ${doCommand}
+        lpSilentPopd > /dev/null
     else
-	EH_problem "Missing ${baseDir} -- Skiping:  ${doCommand}"
-	lpReturn 101
+        EH_problem "Missing ${baseDir} -- Skiping:  ${doCommand}"
+        lpReturn 101
     fi
 
     lpReturn
@@ -858,113 +858,113 @@ while getopts e:T:c:i:p:l:u?n:r:vfh c
 do
     case $c in
     T)
-	case $OPTARG in
-	*[!0-9]* )
-	    echo "$0: -T requires a numeric option"
- 	    badUsage=TRUE
-	    ;;
+        case $OPTARG in
+        *[!0-9]* )
+            echo "$0: -T requires a numeric option"
+            badUsage=TRUE
+            ;;
         [0-9]* )
-	    traceLevel=$OPTARG
-	    ;;
-	esac
-	;;
+            traceLevel=$OPTARG
+            ;;
+        esac
+        ;;
     i)
         visibleFunction="${OPTARG}"   # rest of argv is passed to visibleFunction
-	;;
+        ;;
     p)
-	# MB-2018 -- I am not sure why this was needed
-	#leftSide=`ATTR_leftSide "${OPTARG}"`
-	#rightSide=`ATTR_rightSide "${OPTARG}"`
-	#echo "${leftSide}"="${rightSide}" >> ${dotMeParamTmpFile}
-	
-	echo "${OPTARG}" >> ${dotMeParamTmpFile}
+        # MB-2018 -- I am not sure why this was needed
+        #leftSide=`ATTR_leftSide "${OPTARG}"`
+        #rightSide=`ATTR_rightSide "${OPTARG}"`
+        #echo "${leftSide}"="${rightSide}" >> ${dotMeParamTmpFile}
+        
+        echo "${OPTARG}" >> ${dotMeParamTmpFile}
 
-	G_paramCmndOption=" -p ${OPTARG} ${G_paramCmndOption}"
+        G_paramCmndOption=" -p ${OPTARG} ${G_paramCmndOption}"
        ;;
     l)
-	loadFiles="${loadFiles} ${OPTARG}"
-	G_myName=`FN_nonDirsPart ${OPTARG}`
+        loadFiles="${loadFiles} ${OPTARG}"
+        G_myName=`FN_nonDirsPart ${OPTARG}`
         G_myInvokedName=${OPTARG}
-	;;
+        ;;
 
     c)
-	G_checkMode="${OPTARG}"
-	G_checkCmndOption=" -c "
-	;;
+        G_checkMode="${OPTARG}"
+        G_checkCmndOption=" -c "
+        ;;
 
     e)
-	# Elaboration Text SimplyIgnored
+        # Elaboration Text SimplyIgnored
         elaborationTextSimplyIgnored="${OPTARG}"
-	;;
+        ;;
 
     n)
-	case ${OPTARG} in 
-	    "runOnly")
-		G_runMode="runOnly"
-   	        G_runModeCmndOption=" -n runOnly "
-		;;
-	    "showOnly")
-		G_runMode="showOnly"
-   	        G_runModeCmndOption=" -n showOnly "
-		;;
-	    "seeRun")
-		G_runMode="seeRun"
-   	        G_runModeCmndOption=" -n seeRun "
-		;;
-	    "showRun")
-		G_runMode="showRun"
-   	        G_runModeCmndOption=" -n showRun "
-		;;
-	    "runSafe")
-		G_runMode="runSafe"
-   	        G_runModeCmndOption=" -n runSafe "
-		;;
-	    "showProtected")
-		G_runMode="showProtected"
-   	        G_runModeCmndOption=" -n showProtected "
-		;;
-	    "showRunProtected")
-		G_runMode="showRunProtected"
-   	        G_runModeCmndOption=" -n showRunProtected "
-		;;
-	    *)
-		badUsage=TRUE
-		;;
-	esac
-	;;
+        case ${OPTARG} in 
+            "runOnly")
+                G_runMode="runOnly"
+                G_runModeCmndOption=" -n runOnly "
+                ;;
+            "showOnly")
+                G_runMode="showOnly"
+                G_runModeCmndOption=" -n showOnly "
+                ;;
+            "seeRun")
+                G_runMode="seeRun"
+                G_runModeCmndOption=" -n seeRun "
+                ;;
+            "showRun")
+                G_runMode="showRun"
+                G_runModeCmndOption=" -n showRun "
+                ;;
+            "runSafe")
+                G_runMode="runSafe"
+                G_runModeCmndOption=" -n runSafe "
+                ;;
+            "showProtected")
+                G_runMode="showProtected"
+                G_runModeCmndOption=" -n showProtected "
+                ;;
+            "showRunProtected")
+                G_runMode="showRunProtected"
+                G_runModeCmndOption=" -n showRunProtected "
+                ;;
+            *)
+                badUsage=TRUE
+                ;;
+        esac
+        ;;
 
     r)
-	case ${OPTARG} in 
-	    "basic")
-		G_recordMode="basic"
-   	        G_recordModeCmndOption=" -r basic "
-		;;
-	    *)
-		G_recordMode="${OPTARG}"
-   	        G_recordModeCmndOption=" -r ${OPTARG} "
-		##badUsage=TRUE
-		;;
-	esac
-	;;
+        case ${OPTARG} in 
+            "basic")
+                G_recordMode="basic"
+                G_recordModeCmndOption=" -r basic "
+                ;;
+            *)
+                G_recordMode="${OPTARG}"
+                G_recordModeCmndOption=" -r ${OPTARG} "
+                ##badUsage=TRUE
+                ;;
+        esac
+        ;;
 
     v)
-	G_verbose="verbose"
+        G_verbose="verbose"
         G_verboseCmndOption=" -v "
-	;;
+        ;;
 
     f)
-	G_forceMode="force"
-	G_forceModeCmndOption=" -f "
-	;;
+        G_forceMode="force"
+        G_forceModeCmndOption=" -f "
+        ;;
 
     h)
-	G_humanUser=TRUE
-	G_humanCmndOption=" -h "
-	;;
+        G_humanUser=TRUE
+        G_humanCmndOption=" -h "
+        ;;
 
     u | \?)
-	badUsage=TRUE
-	;;
+        badUsage=TRUE
+        ;;
     esac
 done
 
@@ -1024,13 +1024,13 @@ fi
 
 for i in ${loadFiles} ; do
     if test -f ${i} ; then
-	TM_trace 7 "Pre Loading: $i"
-	loadSegment="PRE"
-	. ${i}
+        TM_trace 7 "Pre Loading: $i"
+        loadSegment="PRE"
+        . ${i}
     else
-	EH_problem "${i} not found: skiping it."
-	usage=TRUE
-	#exit
+        EH_problem "${i} not found: skiping it."
+        usage=TRUE
+        #exit
     fi
 done
 
@@ -1048,12 +1048,12 @@ done
 if [ "${loadSegment}_" == "POST_" ] ; then
 for i in ${loadFiles} ; do
     if test -f ${i} ; then
-	TM_trace 7 "Post Loading: $i"
-	. ${i}
+        TM_trace 7 "Post Loading: $i"
+        . ${i}
     else
-	EH_problem "${i} not found: skiping it."
-	usage=TRUE
-	#exit
+        EH_problem "${i} not found: skiping it."
+        usage=TRUE
+        #exit
     fi
 done
 fi
@@ -1071,8 +1071,8 @@ function iimParamFuncsInvoke {
     EH_assert [[ $# -eq 0 ]]
     declare iimParamFuncsList=$( declare -F | grep iimParam_ | sed -e s/"declare -f "// | cut -d= -f1 )
     for thisFunc in ${iimParamFuncsList} ; do
-	#opDo ${thisFunc} # NOTYET, subject this to tracing
-	${thisFunc}
+        #opDo ${thisFunc} # NOTYET, subject this to tracing
+        ${thisFunc}
     done
 }
 
@@ -1137,12 +1137,12 @@ function opParamMandatoryVerify {
 
 function dash_i_set {
     if [ "${dash_i}" = "" ] ; then
-	dash_i="-i"
+        dash_i="-i"
     elif [ "${dash_i}" = "nil" ] ; then
-	dash_i=""
+        dash_i=""
     else
-	EH_problem "Oops"
-	exit 1
+        EH_problem "Oops"
+        exit 1
     fi
 }
 
@@ -1200,14 +1200,14 @@ if [ "${visibleFunction}X" != "X" ]
 then
     #echo "running ${visibleFunction}"
     if [ ! -z "${G_recordMode}" ] ; then
-	iimRecordBegin
+        iimRecordBegin
     fi
     
     vis_${visibleFunction} "$@"
     exitCode=$?
 
-    if [ ! -z "${G_recordMode}" ] ; then	
-	iimRecordEnd
+    if [ ! -z "${G_recordMode}" ] ; then        
+        iimRecordEnd
     fi
     
     exit ${exitCode}
@@ -1231,7 +1231,7 @@ fi
 runNoArgsHook "$@"
 exitCode=$?
 
-if [ ! -z "${G_recordMode}" ] ; then	
+if [ ! -z "${G_recordMode}" ] ; then    
     iimRecordEnd
 fi
 

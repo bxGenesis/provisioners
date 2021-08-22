@@ -115,7 +115,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if [ "$( type -t deactivate )" == "function" ] ; then
-	deactivate
+        deactivate
     fi
 
     # if vis_unsupportedPlatform_p
@@ -154,13 +154,13 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if which python3 ; then 
-	ANT_cooked "Python3 already install -- Skipped"
+        ANT_cooked "Python3 already install -- Skipped"
     else
-	lpDo sudo apt-get install -y python3 
+        lpDo sudo apt-get install -y python3 
     fi
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -176,13 +176,13 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if which python2 ; then 
-	ANT_cooked "Python2 already install -- Skipped"
+        ANT_cooked "Python2 already install -- Skipped"
     else
-	lpDo sudo apt-get install -y python2 
+        lpDo sudo apt-get install -y python2 
     fi
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -198,15 +198,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if which pip3 ; then
-	ANT_cooked "Pip3 already install -- Skipped"
+        ANT_cooked "Pip3 already install -- Skipped"
     else
-	lpDo sudo apt-get -y install python3-pip	
+        lpDo sudo apt-get -y install python3-pip        
     fi
 
     lpDo sudo -H pip3 install --no-cache-dir --upgrade pip
 
     lpReturn
-}	
+}       
 
 
 
@@ -225,16 +225,16 @@ _EOF_
     lpDo sudo apt-get install -y curl  # needed below
     
     if which pip2 ; then
-	ANT_cooked "Pip2 already install -- Skipped"
+        ANT_cooked "Pip2 already install -- Skipped"
     else
-	cd /tmp; curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
-	sudo python2 /tmp/get-pip.py
+        cd /tmp; curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+        sudo python2 /tmp/get-pip.py
     fi
     
     lpDo sudo -H pip2 install --no-cache-dir --upgrade pip
     
     lpReturn
-}	
+}       
 
 
 _CommentBegin_
@@ -253,7 +253,7 @@ _EOF_
     lpDo sudo -H pip3 install --no-cache-dir --upgrade virtualenv    
 
     lpReturn
-}	
+}       
 
 
 function vis_sysPipInstall_bisosPlatform2 {
@@ -267,7 +267,7 @@ _EOF_
     lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform    
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_

@@ -40,7 +40,7 @@ in their name (for example vis_someAction) become invokable at command line with
 function vis_someAction {
     echo "Param: someParam=${someParam}"
     echo "Args: $@"
-	return
+        return
 }
 ```
 

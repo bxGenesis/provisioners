@@ -33,7 +33,7 @@ function vis_moduleDescription {  cat  << _EOF_
 *  [[elisp:(org-cycle)][| ]]  Info          :: *[Module Description:]* [[elisp:(org-cycle)][| ]]
 
 _EOF_
-			       }
+                               }
 
 
 minUidSpec=1000
@@ -86,7 +86,7 @@ function vis_uidRangePasswdFile {
     G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 _EOF_
-		       }
+                       }
 
     local passwdLines
     local eachUid
@@ -97,10 +97,10 @@ _EOF_
     readarray passwdLines <<< ${sortedPasswd}
     
     for each in "${passwdLines[@]}" ; do
-	eachUid=$( echo ${each} | cut -d : -f 3 )
-	if (( eachUid >= uidMinSpec )) && (( eachUid < uidMaxSpec )) ; then
-	    echo -n "${each}"
-	fi
+        eachUid=$( echo ${each} | cut -d : -f 3 )
+        if (( eachUid >= uidMinSpec )) && (( eachUid < uidMaxSpec )) ; then
+            echo -n "${each}"
+        fi
     done
 }
 
@@ -117,33 +117,33 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local userAcctName=$1
-	if ! vis_userAcctExists ${userAcctName} ; then
-	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
-	
-	lpDo sudo rm -r ${userAcctHome}
+        EH_assert [[ $# -eq 1 ]]
+        local userAcctName=$1
+        if ! vis_userAcctExists ${userAcctName} ; then
+            EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
+        
+        lpDo sudo rm -r ${userAcctHome}
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -164,34 +164,34 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local userAcctName=$1
-	if ! vis_userAcctExists ${userAcctName} ; then
-	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
-	
-	lpDo sudo mv ${userAcctHome} ${userAcctHome}.defunct
-	lpDo sudo chmod 000 ${userAcctHome}.defunct
+        EH_assert [[ $# -eq 1 ]]
+        local userAcctName=$1
+        if ! vis_userAcctExists ${userAcctName} ; then
+            EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        local userAcctHome=$( vis_forAcctNameGetHome ${userAcctName} )
+        
+        lpDo sudo mv ${userAcctHome} ${userAcctHome}.defunct
+        lpDo sudo chmod 000 ${userAcctHome}.defunct
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -213,31 +213,31 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local userAcctName=$1
-	if ! vis_userAcctExists ${userAcctName} ; then
-	    EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	lpDo sudo userdel ${userAcctName}    	
+        EH_assert [[ $# -eq 1 ]]
+        local userAcctName=$1
+        if ! vis_userAcctExists ${userAcctName} ; then
+            EH_problem "${userAcctName} Account Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        lpDo sudo userdel ${userAcctName}       
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -260,31 +260,31 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local groupName=$1
-	if vis_groupsExist ${groupName} ; then
-	    EH_problem "${groupName} Already Does Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	lpDo sudo groupadd ${groupName}    	
+        EH_assert [[ $# -eq 1 ]]
+        local groupName=$1
+        if vis_groupsExist ${groupName} ; then
+            EH_problem "${groupName} Already Does Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        lpDo sudo groupadd ${groupName}         
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -306,8 +306,8 @@ _EOF_
     local exitCode=0
     
     if vis_groupExists ${thisGroupName} ; then
-	EH_problem "${groupName} Already Does Exist -- ${G_thisFunc} Processing Skipped"
-	lpReturn 101
+        EH_problem "${groupName} Already Does Exist -- ${G_thisFunc} Processing Skipped"
+        lpReturn 101
     fi
     
     lpDo sudo groupadd --gid ${thisGid} ${thisGroupName}
@@ -329,31 +329,31 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local groupName=$1
-	if ! vis_groupExists ${groupName} ; then
-	    EH_problem "${groupName} Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
-	lpDo sudo groupdel ${groupName}    	
+        EH_assert [[ $# -eq 1 ]]
+        local groupName=$1
+        if ! vis_groupExists ${groupName} ; then
+            EH_problem "${groupName} Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
+        lpDo sudo groupdel ${groupName}         
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -377,38 +377,38 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local userAcctName=$1
-	if ! vis_userAcctExists ${userAcctName} ; then
-	    EH_problem "${userAcctName} Does Not Exist -- ${thisFunc} Processing Skipped"
-	    lpReturn 101
-	fi
+        EH_assert [[ $# -eq 1 ]]
+        local userAcctName=$1
+        if ! vis_userAcctExists ${userAcctName} ; then
+            EH_problem "${userAcctName} Does Not Exist -- ${thisFunc} Processing Skipped"
+            lpReturn 101
+        fi
 
-	ANT_raw "--- ${userAcctName}: passwd, group, id, sudoers ---"
-	
-	lpDo getent passwd ${userAcctName}
-	lpDo getent group ${userAcctName}
+        ANT_raw "--- ${userAcctName}: passwd, group, id, sudoers ---"
+        
+        lpDo getent passwd ${userAcctName}
+        lpDo getent group ${userAcctName}
 
-	lpDo sudo -u ${userAcctName} id
-	lpDo sudo grep ${userAcctName} /etc/sudoers
+        lpDo sudo -u ${userAcctName} id
+        lpDo sudo grep ${userAcctName} /etc/sudoers
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -430,17 +430,17 @@ _EOF_
     local retVal=0
 
     if ! vis_groupExists "${groupName}" ; then
-	ANT_raw "${groupName} entry does not exist in /etc/group"
-	lpReturn 101
+        ANT_raw "${groupName} entry does not exist in /etc/group"
+        lpReturn 101
     fi
 
     local getentStr=$( getent group ${groupName} )
     local getentGid=$( getent group ${groupName} | cut -d : -f 3 )
 
     if [ "${groupGid}" != "${getentGid}" ] ; then
-	ANT_raw "GID of ${groupName} entry in /etc/group is not ${groupGid}"
-	ANT_raw "${getentStr}"
-	retVal=101
+        ANT_raw "GID of ${groupName} entry in /etc/group is not ${groupGid}"
+        ANT_raw "${getentStr}"
+        retVal=101
     fi
     lpReturn ${retVal}
 }
@@ -450,7 +450,7 @@ function forAcctNameGetUid {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 For acctName return the 3rd field as uid.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
 
     forAcctNameGetFieldNu $1 3
@@ -461,7 +461,7 @@ function vis_forAcctNameGetHome {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 For acctName return home -- the 6th field.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 1 ]]
 
     forAcctNameGetFieldNu $1 6
@@ -473,7 +473,7 @@ function forAcctNameGetFieldNu {
     function describeF {  G_funcEntryShow; cat  << _EOF_
 Verifies that an account is as expected.
 _EOF_
-		       }
+                       }
     EH_assert [[ $# -eq 2 ]]
 
     local acctName=$1
@@ -481,13 +481,13 @@ _EOF_
     
     local getentStr=$( getent passwd ${acctName} )
     if [ -z "${getentStr}" ] ; then
-	EH_problem "Missing passwd entry for ${acctName}"
-	lpReturn 101
+        EH_problem "Missing passwd entry for ${acctName}"
+        lpReturn 101
     fi
     local getentField=$( echo ${getentStr} | cut -d : -f ${fieldNu} )
     if [ -z "${getentField}" ] ; then
-	EH_problem "Missing passwd field entry for ${acctName} fieldNu ${fieldNu}"
-	lpReturn 101
+        EH_problem "Missing passwd field entry for ${acctName} fieldNu ${fieldNu}"
+        lpReturn 101
     fi
     echo "${getentField}"
 }
@@ -511,8 +511,8 @@ _EOF_
     local retVal=0
 
     if ! vis_userAcctExists "${acctName}" ; then
-	ANT_raw "${acctName} account entry does not exist in /etc/passwd"
-	lpReturn 101
+        ANT_raw "${acctName} account entry does not exist in /etc/passwd"
+        lpReturn 101
     fi
 
     local getentStr=$( getent passwd ${acctName} )
@@ -521,20 +521,20 @@ _EOF_
     local getentAcctHome=$( echo ${getentStr} | cut -d : -f 6 )    
 
     if [ "${acctUid}" != "${getentAcctUid}" ] ; then
-	ANT_raw "UID of ${acctName} entry in /etc/passwd is not ${acctUid}"
-	retVal=101
+        ANT_raw "UID of ${acctName} entry in /etc/passwd is not ${acctUid}"
+        retVal=101
     fi
     if [ "${acctGid}" != "${getentAcctGid}" ] ; then
-	ANT_raw "GID of ${acctName} entry in /etc/passwd is not ${acctGid}"
-	retVal=101
+        ANT_raw "GID of ${acctName} entry in /etc/passwd is not ${acctGid}"
+        retVal=101
     fi
     if [ "${acctHome}" != "${getentAcctHome}" ] ; then
-	ANT_raw "HOME of ${acctName} entry in /etc/passwd is not ${acctHome}"
-	retVal=101
+        ANT_raw "HOME of ${acctName} entry in /etc/passwd is not ${acctHome}"
+        retVal=101
     fi
 
     if [ "$retVal" != "0" ] ; then
-	ANT_raw "${getentStr}"
+        ANT_raw "${getentStr}"
     fi
     
     lpReturn ${retVal}
@@ -555,33 +555,33 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local groupName=$1
+        EH_assert [[ $# -eq 1 ]]
+        local groupName=$1
 
-	if ! vis_groupExists "${groupName}" ; then
-	    ANT_raw "${groupName} entry does not exist in /etc/group"
-	    lpReturn 101
-	fi
+        if ! vis_groupExists "${groupName}" ; then
+            ANT_raw "${groupName} entry does not exist in /etc/group"
+            lpReturn 101
+        fi
 
-	lpDo getent group ${groupName}
+        lpDo getent group ${groupName}
     }
 
 ####+BEGIN: bx:bsip:bash/processEachArgsOrStdin 
     if [ $# -gt 0 ] ; then
-	local each=""
-	for each in ${inputsList} ; do
-	    lpDo processEach ${each}
-	done
+        local each=""
+        for each in ${inputsList} ; do
+            lpDo processEach ${each}
+        done
     else
-	local eachLine=""
-	while read -r -t 1 eachLine ; do
-	    if [ ! -z "${eachLine}" ] ; then
-		local each=""
-		for each in ${eachLine} ; do
-		    lpDo processEach ${each}
-		done
-	    fi
-	done
+        local eachLine=""
+        while read -r -t 1 eachLine ; do
+            if [ ! -z "${eachLine}" ] ; then
+                local each=""
+                for each in ${eachLine} ; do
+                    lpDo processEach ${each}
+                done
+            fi
+        done
     fi
 
 ####+END:
@@ -625,7 +625,7 @@ _EOF_
     if egrep "^${acctName}" /etc/sudoers ; then
        ANT_raw "${acctName} is already in sudoers, skipped"
     else
-	lpDo sh -c "echo ${acctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
+        lpDo sh -c "echo ${acctName} ALL=\(ALL\) NOPASSWD: ALL >> /etc/sudoers"
     fi
 }
 
@@ -661,8 +661,8 @@ _EOF_
     local getentStr=$( getent passwd ${acctName} )
     
     if [ -z "${getentStr}" ] ; then
-	EH_problem "Missing acct -- ${acctName}"
-	lpReturn 101
+        EH_problem "Missing acct -- ${acctName}"
+        lpReturn 101
     fi
     
     local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
@@ -695,8 +695,8 @@ _EOF_
     local getentStr=$( getent passwd ${acctName} )
     
     if [ -z "${getentStr}" ] ; then
-	EH_problem "Missing acct -- ${acctName}"
-	lpReturn 101
+        EH_problem "Missing acct -- ${acctName}"
+        lpReturn 101
     fi
 
     local getentAcctUid=$( echo ${getentStr} | cut -d : -f 3 )
@@ -713,21 +713,21 @@ _EOF_
     umask ${effectiveUmask}
 
     if [ ! -e "${dotProfilePath}" ] ; then
-	lpDo eval cat  << _EOF_  \> "${dotProfilePath}"
+        lpDo eval cat  << _EOF_  \> "${dotProfilePath}"
 #
 umask ${umaskValue}
 _EOF_
-	lpDo chown ${getentAcctUid}:${getentAcctGid} "${dotProfilePath}"
-	lpDo chmod ${filePermsOfUmaskValue} "${dotProfilePath}"
+        lpDo chown ${getentAcctUid}:${getentAcctGid} "${dotProfilePath}"
+        lpDo chmod ${filePermsOfUmaskValue} "${dotProfilePath}"
     else
-	if grep "umask ${umaskValue}" "${dotProfilePath}" ; then
-	    ANT_raw "umask is already properly set"
-	else
-	    lpDo eval cat  << _EOF_  \>\> "${dotProfilePath}"
+        if grep "umask ${umaskValue}" "${dotProfilePath}" ; then
+            ANT_raw "umask is already properly set"
+        else
+            lpDo eval cat  << _EOF_  \>\> "${dotProfilePath}"
 #
 umask ${umaskValue}
 _EOF_
-	fi
+        fi
     fi
 
     lpReturn

@@ -19,9 +19,9 @@ _EOF_
     local thisSelfReliantBase=$( vis_basedOnGitDetermineThisSelfReliantBase )
 
     if [ ! -z "${rootDir_provisioners}" ] ; then
-	if [ "${thisSelfReliantBase}" != "${rootDir_provisioners}" ] ; then
-	    EH_problem "Inconsistent rootDir_provisioners=${rootDir_provisioners} ${thisSelfReliantBase}"
-	fi
+        if [ "${thisSelfReliantBase}" != "${rootDir_provisioners}" ] ; then
+            EH_problem "Inconsistent rootDir_provisioners=${rootDir_provisioners} ${thisSelfReliantBase}"
+        fi
     fi
     echo "${thisSelfReliantBase}"
 }
@@ -57,8 +57,8 @@ _EOF_
     }
     EH_assert [[ $# -eq 1 ]]
 
-    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;	
+    #if vis_reRunAsRoot G_thisFunc $@ ; then lpReturn globalReRunRetVal; fi;    
 
     lpReturn
-}	
+}       
 

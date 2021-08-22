@@ -25,7 +25,7 @@ _EOF_
     echo ${pid}
 
     lpReturn
-}	
+}       
 
 
 function vis_forPortFullReport {
@@ -42,24 +42,24 @@ _EOF_
     local pid=""
 
     for each in "$@" ; do
-	portNu="${each}"
-	pid=$(forPortGetProcessId "${portNu}")
+        portNu="${each}"
+        pid=$(forPortGetProcessId "${portNu}")
 
-	if [ -z "${pid}" ] ; then
-	    #ANT_raw "No Process Is Running On Port ${portNu}"
-	    ANT_raw "====== PortNu=${portNu} -- No Process Running =======" 	    
-	    continue
-	fi
+        if [ -z "${pid}" ] ; then
+            #ANT_raw "No Process Is Running On Port ${portNu}"
+            ANT_raw "====== PortNu=${portNu} -- No Process Running ======="         
+            continue
+        fi
 
-	ANT_raw "====== PortNu=${portNu} -- PID=${pid} ======="
+        ANT_raw "====== PortNu=${portNu} -- PID=${pid} ======="
 
-	opDo forPidGetCmndline ${pid}
+        opDo forPidGetCmndline ${pid}
 
-	opDo forPidGetCwd ${pid}
+        opDo forPidGetCwd ${pid}
     done
 
     lpReturn
-}	
+}       
 
 
 _CommentBegin_

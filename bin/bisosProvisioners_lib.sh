@@ -30,10 +30,10 @@ _EOF_
     lpDo vis_provisionersGitReposAnonSetup
 
     if [ -f "${bisosBsipProvisionerLib}" ] ; then
-	source "${bisosBsipProvisionerLib}"
-	lpDo vis_bsipProvision_sysBasePlatform
+        source "${bisosBsipProvisionerLib}"
+        lpDo vis_bsipProvision_sysBasePlatform
     else
-	EH_problem "Missing ${bisosBsipProvisionerLib}"
+        EH_problem "Missing ${bisosBsipProvisionerLib}"
     fi
 }
 
@@ -89,8 +89,8 @@ ${G_myName} ${extraInfo} -i provisionersGitReposAnonSetup   # Runs as sudo -u bi
 _EOF_
     
     if [ -f "${bisosBsipProvisionerLib}" ] ; then
-	source "${bisosBsipProvisionerLib}"	
-	vis_bisosProvisionExamples "${extraInfo}"
+        source "${bisosBsipProvisionerLib}"     
+        vis_bisosProvisionExamples "${extraInfo}"
     fi
 }
 
@@ -145,9 +145,9 @@ _EOF_
     lpDo mkdir -p "${gitReposAuthBase}"
 
     if [ -d "${thisRepoDir}" ] ; then
-	ANT_raw "${thisRepoDir} exists -- git clone skipped"
+        ANT_raw "${thisRepoDir} exists -- git clone skipped"
     else
-	inBaseDirDo "${gitReposAuthBase}" git clone git@github.com:bxGenesis/provisioners.git
+        inBaseDirDo "${gitReposAuthBase}" git clone git@github.com:bxGenesis/provisioners.git
     fi
 
     lpReturn
@@ -218,10 +218,10 @@ _EOF_
     local provisionersRootDir="$( vis_rootDirProvisionersGet )"
     
     if [ -z "${thisGitRoot}" ] ; then
-	# /opt/bisosProvisioner/gitRepos/provisioners/bin
-	provisionersBinBase="${provisionersRootDir}/gitRepos/provisioners/bin"
+        # /opt/bisosProvisioner/gitRepos/provisioners/bin
+        provisionersBinBase="${provisionersRootDir}/gitRepos/provisioners/bin"
     else
-	provisionersBinBase="${thisGitRoot}/bin"
+        provisionersBinBase="${thisGitRoot}/bin"
     fi
 
     echo ${provisionersBinBase}
@@ -236,15 +236,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
-	
+        
     # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosGroupAccount.sh
     local bisosProg="${provisionersBinBase}/bisosGroupAccount.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i bisosGroupAcctProvisionSetup
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i bisosGroupAcctProvisionSetup
     fi
     
     lpReturn
@@ -258,15 +258,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
-	
+        
     # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosSysPythonSetup.sh
     local bisosProg="${provisionersBinBase}/bisosSysPythonSetup.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i pythonSysEnvPrepForVirtenvs
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i pythonSysEnvPrepForVirtenvs
     fi
     
     lpReturn
@@ -280,15 +280,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
-	
+        
     # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosProvisionersVenvSetup.sh
     local bisosProg="${provisionersBinBase}/bisosProvisionersVenvSetup.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
     
     lpReturn
@@ -303,15 +303,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
-	
+        
     # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosBaseDirsSetup.sh
     local bisosProg="${provisionersBinBase}/bisosBaseDirsSetup.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i bisosBaseDirsSetup
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i bisosBaseDirsSetup
     fi
     
     lpReturn
@@ -327,15 +327,15 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local provisionersBinBase="$( provisionersBinBaseGet )"
-	
+        
     # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosBaseDirsSetup.sh
     local bisosProg="${provisionersBinBase}/bisosBaseDirsSetup.sh"
 
     if [ ! -x "${bisosProg}" ] ; then
-	EH_problem "Missing ${bisosProg}"
-	lpReturn 1
-    else	
-    	opDo "${bisosProg}" -h -v -n showRun -i provisionersGitReposAnonSetup
+        EH_problem "Missing ${bisosProg}"
+        lpReturn 1
+    else        
+        opDo "${bisosProg}" -h -v -n showRun -i provisionersGitReposAnonSetup
     fi
     
     lpReturn

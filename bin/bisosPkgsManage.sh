@@ -31,7 +31,7 @@ fi
 function vis_describe {  cat  << _EOF_
 Module description comes here.
 _EOF_
-		      }
+                      }
 
 # Import Libraries
 
@@ -96,26 +96,26 @@ _EOF_
 
     
     if [ "$( type -t deactivate )" == "function" ] ; then
-	echoAnn "Deactivating"
-	deactivate
+        echoAnn "Deactivating"
+        deactivate
     fi
 
     if [ -d "${virtEnv}" ] ; then
-	activateFile=${virtEnv}/bin/activate
+        activateFile=${virtEnv}/bin/activate
     else
-	local bisosRootDir=$( bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
-	local bisosVirtEnvBase="${bisosRootDir}/venv/${virtEnv}"
-	if [ -d "${bisosVirtEnvBase}" ] ; then
-	    activateFile=${bisosVirtEnvBase}/bin/activate
-	else
-	    EH_problem "Missing  ${bisosVirtEnvBase}"
-	    lpReturn
-	fi
+        local bisosRootDir=$( bx-platformInfoManage.py  -i pkgInfoParsGet | grep rootDir_bisos | cut -d '=' -f 2 )
+        local bisosVirtEnvBase="${bisosRootDir}/venv/${virtEnv}"
+        if [ -d "${bisosVirtEnvBase}" ] ; then
+            activateFile=${bisosVirtEnvBase}/bin/activate
+        else
+            EH_problem "Missing  ${bisosVirtEnvBase}"
+            lpReturn
+        fi
     fi
 
     if [ ! -f "${activateFile}" ] ; then
-	EH_problem "Missing  ${activateFile}"
-	lpReturn
+        EH_problem "Missing  ${activateFile}"
+        lpReturn
     fi
 
     ANT_raw "Running as ${runAs} with umask=${thisUmask}"

@@ -28,7 +28,7 @@ _EOF_
     local outVal=""
 
     if [ -f "${bx_platformInfoManage}" ] ; then 
-	outVal=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep ${parName} | cut -d '=' -f 2 )
+        outVal=$( ${bx_platformInfoManage} -i pkgInfoParsGet | grep ${parName} | cut -d '=' -f 2 )
     fi
     echo "${outVal}"
 }
@@ -37,7 +37,7 @@ function bxp_bisosUserName_get {
     local default="/bisos"
     local outVal=$( bxp_platformInfoManageVarGet "bisosUserName" )
     if [ -z "${outVal}" ] ; then
-	outVal="${default}"
+        outVal="${default}"
     fi
     echo ${outVal}
 }
@@ -46,7 +46,7 @@ function bxp_bisosGroupName_get {
     local default="/bisos"
     local outVal=$( bxp_platformInfoManageVarGet "bisosGroupName" )
     if [ -z "${outVal}" ] ; then
-	outVal="${default}"
+        outVal="${default}"
     fi
     echo ${outVal}
 }
@@ -55,7 +55,7 @@ function bxp_rootDir_bisos_get {
     local default="/bisos"
     local outVal=$( bxp_platformInfoManageVarGet "rootDir_bisos" )
     if [ -z "${outVal}" ] ; then
-	outVal="${default}"
+        outVal="${default}"
     fi
     echo ${outVal}
 }
@@ -65,7 +65,7 @@ function bxp_rootDir_bxo_get {
     local outVal=""
     outVal=$( bxp_platformInfoManageVarGet "rootDir_bxo" )
     if [ -z "${outVal}" ] ; then
-	outVal="${default}"
+        outVal="${default}"
     fi
     echo ${outVal}
 }
@@ -74,7 +74,7 @@ function bxp_rootDir_deRun_get {
     local default="/de/run"
     local outVal=$( bxp_platformInfoManageVarGet "rootDir_deRun" )
     if [ -z "${outVal}" ] ; then
-	outVal="${default}"
+        outVal="${default}"
     fi
     echo ${outVal}
 }
@@ -83,7 +83,7 @@ function bxp_rootDir_provisioners_get {
     local default="/opt/bisosProvisioner"
     local outVal=$( bxp_platformInfoManageVarGet "rootDir_provisioners" )
     if [ -z "${outVal}" ] ; then
-	outVal="${default}"
+        outVal="${default}"
     fi
     echo ${outVal}
 }

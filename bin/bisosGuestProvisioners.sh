@@ -31,7 +31,7 @@ fi
 function vis_describe {  cat  << _EOF_
 Module description comes here.
 _EOF_
-		      }
+                      }
 
 # Import Libraries
 
@@ -80,26 +80,26 @@ _EOF_
     local thisFunc=${G_thisFunc}
 
     function processEach {
-	EH_assert [[ $# -eq 1 ]]
-	local virtProvider=$1
-	case ${virtProvider} in
-	    kvm)
-		EH_problem "KVM notyet"
-		;;
-	    virtualbox)
-		EH_problem "VirtualBox notyet"		
-		;;
-	    vmware)
-		EH_problem "Vmware notyet"				
-		;;
-	    *)
-		EH_problem "Unknown ${virtProvider} notyet"
-		;;
-	esac
+        EH_assert [[ $# -eq 1 ]]
+        local virtProvider=$1
+        case ${virtProvider} in
+            kvm)
+                EH_problem "KVM notyet"
+                ;;
+            virtualbox)
+                EH_problem "VirtualBox notyet"          
+                ;;
+            vmware)
+                EH_problem "Vmware notyet"                              
+                ;;
+            *)
+                EH_problem "Unknown ${virtProvider} notyet"
+                ;;
+        esac
     }
     
     for each in ${inputsList} ; do
-	lpDo processEach ${each}
+        lpDo processEach ${each}
     done
     
     lpReturn

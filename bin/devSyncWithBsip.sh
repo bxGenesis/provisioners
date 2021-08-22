@@ -31,7 +31,7 @@ fi
 function vis_describe {  cat  << _EOF_
 Module description comes here.
 _EOF_
-		      }
+                      }
 
 # Import Libraries
 
@@ -90,21 +90,21 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     if cmp /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh; then
-	ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh"	
+        ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh"    
     else
-	lpDo cp /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh
+        lpDo cp /bisos/core/bsip/bin/unisosAccounts_lib.sh ./unisosAccounts_lib.sh
     fi
 
     if cmp /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh; then
-	ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh"
+        ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh"
     else
-	lpDo cp /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh	
+        lpDo cp /bisos/core/bsip/bin/bisosGroupAccount_lib.sh ./bisosGroupAccount_lib.sh        
     fi
 
     if cmp /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh; then
-	ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh"
+        ANT_raw "Same, update skipped -- /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh"
     else
-	lpDo cp /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh	
+        lpDo cp /bisos/core/bsip/bin/platformBases_lib.sh ./platformBases_lib.sh        
     fi
 
     lpReturn
