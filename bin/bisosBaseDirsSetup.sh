@@ -144,9 +144,9 @@ _EOF_
     # 
     #
 
-    local py2ActivateFile="${venvBasePy2}/bin/activate"
+    local py3ActivateFile="${venvBasePy3}/bin/activate"
 
-    source ${py2ActivateFile}
+    source ${py3ActivateFile}
 
     if [ -z "${bxp_bisosUserName}" ] ; then
         EH_problem "Missing bxp_bisosUserName"
@@ -216,9 +216,9 @@ _EOF_
 
     local bisosRootDir=$1
 
-    local py2ActivateFile="${venvBasePy2}/bin/activate"
+    local py3ActivateFile="${venvBasePy3}/bin/activate"
 
-    source ${py2ActivateFile}
+    source ${py3ActivateFile}
     
     lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
 
@@ -272,13 +272,13 @@ _EOF_
 
     local baseDir=$1
 
-    # local py2ActivateFile="${venvBasePy2}/bin/activate"
+    # local py3ActivateFile="${venvBasePy3}/bin/activate"
 
-    # source ${py2ActivateFile}
+    # source ${py3ActivateFile}
     
-    lpDo ${venvBasePy2}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all    
-    lpDo ${venvBasePy2}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
-    lpDo ${venvBasePy2}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode="anon"  -i pbdUpdate all    
+    lpDo ${venvBasePy3}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all
+    lpDo ${venvBasePy3}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+    lpDo ${venvBasePy3}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode="anon"  -i pbdUpdate all
 }
 
 

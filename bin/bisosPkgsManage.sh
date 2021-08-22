@@ -59,8 +59,8 @@ function vis_examples {
 $( examplesSeperatorTopLabel "${G_myName}" )
 $( examplesSeperatorChapter "BISOS Packages Management" )
 $( examplesSeperatorSection "Python Package Installer" )
-${G_myName} ${extraInfo} -p runAs=bisos -i pyPkgInstall py2-bisos-3 unisos.marme 
-${G_myName} ${extraInfo} -i pyPkgInstall py2-bisos-3 unisos.marme 
+${G_myName} ${extraInfo} -p runAs=bisos -i pyPkgInstall py3-bisos-3 unisos.marme
+${G_myName} ${extraInfo} -i pyPkgInstall py3-bisos-3 unisos.marme
 $( examplesSeperatorSection "BISOS BaseDirs Setup" )
 ${G_myName} ${extraInfo} -i marme_install
 ${G_myName} ${extraInfo} -p runAs=bisos -i marme_install
@@ -147,7 +147,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local pkgName=unisos.marme
-    local bisosVenvName=py2-bisos-3
+    local bisosVenvName=py3-bisos-3
 
     lpDo vis_pyPkgInstall "${bisosVenvName}" ${pkgName}
 }

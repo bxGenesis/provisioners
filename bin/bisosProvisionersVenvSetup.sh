@@ -127,7 +127,7 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
     local py3ActivateFile="${venvBasePy3}/bin/activate"
-    local py2ActivateFile="${venvBasePy2}/bin/activate"
+    #local py2ActivateFile="${venvBasePy2}/bin/activate"
 
     if [ -f "${py3ActivateFile}" ] ; then
         ANT_raw "${py3ActivateFile} Exists -- Py3 Venv creation skipped"
@@ -135,11 +135,11 @@ _EOF_
         lpDo virtualenv --python=python3 ${venvBasePy3} 
     fi
 
-    if [ -f "${py2ActivateFile}" ] ; then
-        ANT_raw "${py2ActivateFile} Exists -- Py2 Venv creation skipped"
-    else
-        lpDo virtualenv --python=python2 ${venvBasePy2} 
-    fi
+    # if [ -f "${py2ActivateFile}" ] ; then
+    #     ANT_raw "${py2ActivateFile} Exists -- Py2 Venv creation skipped"
+    # else
+    #     lpDo virtualenv --python=python2 ${venvBasePy2}
+    # fi
 
     lpReturn
 }
@@ -159,24 +159,24 @@ _EOF_
     EH_assert [[ $# -eq 0 ]]
 
 
-    local py2ActivateFile="${venvBasePy2}/bin/activate"
+    local py3ActivateFile="${venvBasePy3}/bin/activate"
 
-    if [ ! -f "${py2ActivateFile}" ] ; then
-        EH_problem "Missing ${py2ActivateFile} -- BISOS Provisioners venv pip installs aborted"
+    if [ ! -f "${py3ActivateFile}" ] ; then
+        EH_problem "Missing ${py3ActivateFile} -- BISOS Provisioners venv pip installs aborted"
         lpReturn 101
     fi
 
-    source ${py2ActivateFile}
+    source ${py3ActivateFile}
     
-    lpDo pip2 install --upgrade bisos.platform
+    lpDo pip3 install --upgrade bisos.platform
 
-    lpDo pip2 install --upgrade bisos.common
+    lpDo pip3 install --upgrade bisos.common
 
-    lpDo pip2 install --upgrade bisos.bx-bases
+    lpDo pip3 install --upgrade bisos.bx-bases
 
     which -a bx-platformInfoManage.py
 
-    lpDo pip2 list 
+    lpDo pip3 list
     
     # touch /tmp/NOTYET.log
 
