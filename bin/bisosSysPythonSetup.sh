@@ -125,15 +125,15 @@ _EOF_
 
     opDo vis_sysInstall_python3
 
-    opDo vis_sysInstall_python2
+    # opDo vis_sysInstall_python2
 
     opDo vis_sysInstall_pip3
 
-    opDo vis_sysInstall_pip2
+    # opDo vis_sysInstall_pip2
 
     opDo vis_sysPipInstall_virtualenv3
 
-    vis_sysPipInstall_bisosPlatform2    
+    vis_sysPipInstall_bisosPlatform2    # This actually uses pip3 -- should be renamed. NOTYET
 
     # lpDo sudo -H pip list
 
@@ -260,11 +260,13 @@ function vis_sysPipInstall_bisosPlatform2 {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 To provide parameters for destination provisioning
+*** NOTYET, should be renamed to get rid of 2.
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform    
+    #lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
+    lpDo sudo -H pip3 install --no-cache-dir --upgrade bisos.platform
 
     lpReturn
 }       
