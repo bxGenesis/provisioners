@@ -96,7 +96,7 @@ ${G_myName} ${extraInfo} -i sysInstall_python2
 ${G_myName} ${extraInfo} -i sysInstall_pip3
 ${G_myName} ${extraInfo} -i sysInstall_pip2
 ${G_myName} ${extraInfo} -i sysPipInstall_virtualenv3
-${G_myName} ${extraInfo} -i sysPipInstall_bisosPlatform2
+${G_myName} ${extraInfo} -i sysPipInstall_bisosPlatform
 _EOF_
 }
 
@@ -133,7 +133,7 @@ _EOF_
 
     opDo vis_sysPipInstall_virtualenv3
 
-    vis_sysPipInstall_bisosPlatform2    # This actually uses pip3 -- should be renamed. NOTYET
+    vis_sysPipInstall_bisosPlatform    # This actually uses pip3 -- should be renamed. NOTYET
 
     # lpDo sudo -H pip list
 
@@ -175,6 +175,12 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    if sysOS_isDeb12 ; then
+        EH_problem "Obsolete invokation of  vis_sysInstall_python2 -- To Be Deleted"
+        lpReturn
+    fi
+
+
     if which python2 ; then 
         ANT_cooked "Python2 already install -- Skipped"
     else
@@ -203,7 +209,9 @@ _EOF_
         lpDo sudo apt-get -y install python3-pip        
     fi
 
-    lpDo sudo -H pip3 install --no-cache-dir --upgrade pip
+    if sysOS_isDeb11 ; then
+        lpDo sudo -H pip3 install --no-cache-dir --upgrade pip
+    fi
 
     lpReturn
 }       
@@ -221,6 +229,11 @@ function vis_sysInstall_pip2 {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    if sysOS_isDeb12 ; then
+        EH_problem "Obsolete invokation of  vis_sysInstall_pip2 -- To Be Deleted"
+        lpReturn
+    fi
 
     lpDo sudo apt-get install -y curl  # needed below
     
@@ -250,13 +263,19 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo sudo -H pip3 install --no-cache-dir --upgrade virtualenv    
+    if sysOS_isDeb12 ; then
+        lpDo sudo apt-get -y install python3-virtualenv
+    elif sysOS_isDeb11 ; then
+        lpDo sudo -H pip3 install --no-cache-dir --upgrade virtualenv
+    else
+        EH_problem "Unsupport sysOS  sysOS=${sysOS}, sysDist=${sysDist}, sysID=${sysID}"
+    fi
 
     lpReturn
 }       
 
 
-function vis_sysPipInstall_bisosPlatform2 {
+function vis_sysPipInstall_bisosPlatform {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
 To provide parameters for destination provisioning
@@ -265,8 +284,14 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    #lpDo sudo -H pip2 install --no-cache-dir --upgrade bisos.platform
-    lpDo sudo -H pip3 install --no-cache-dir --upgrade bisos.platform
+    if sysOS_isDeb12 ; then
+        lpDo pipx install bisos.platform
+    elif sysOS_isDeb11 ; then
+        lpDo sudo -H pip3 install --no-cache-dir --upgrade bisos.platform
+    else
+        EH_problem "Unsupport sysOS  sysOS=${sysOS}, sysDist=${sysDist}, sysID=${sysID}"
+    fi
+
 
     lpReturn
 }       

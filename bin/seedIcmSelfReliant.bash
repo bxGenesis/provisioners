@@ -359,6 +359,92 @@ function _continueAfterThis {
 }
 
 
+sysOS=${sysOS-}
+sysDist=${sysDist-}
+sysID=${sysID-}
+
+function sysOS_detect {
+  if [[ ( -z "${sysOS}" ) && ( -z "${sysDist}" ) ]]; then
+    # some systems dont have lsb-release yet have the lsb_release binary and
+    # vice-versa
+    if [ -e /etc/lsb-release ]; then
+      . /etc/lsb-release
+
+      if [ "${sysID}" = "raspbian" ]; then
+        sysOS=${sysID}
+        sysDist=`cut --delimiter='.' -f1 /etc/debian_version`
+      else
+        sysOS=${DISTRIB_ID}
+        sysDist=${DISTRIB_CODENAME}
+
+        if [ -z "$sysDist" ]; then
+          sysDist=${DISTRIB_RELEASE}
+        fi
+      fi
+
+    elif [ -e /etc/debian_version ]; then
+      # some Debians have jessie/sid in their /etc/debian_version
+      # while others have '6.0.7'
+      sysOS=`cat /etc/issue | head -1 | awk '{ print tolower($1) }'`
+      if grep -q '/' /etc/debian_version; then
+        sysDist=`cut --delimiter='/' -f1 /etc/debian_version`
+      else
+        sysDist=`cut --delimiter='.' -f1 /etc/debian_version`
+      fi
+
+    elif [ `which lsb_release 2>/dev/null` ]; then
+      sysDist=`lsb_release -c | cut -f2`
+      sysOS=`lsb_release -i | cut -f2 | awk '{ print tolower($1) }'`
+
+    else
+      unknown_sysOS
+    fi
+  fi
+
+  if [ -z "$sysDist" ]; then
+    unknown_sysOS
+  fi
+
+  # remove whitespace from SYSOS and sysDist name
+  sysOS="${sysOS// /}"
+  sysDist="${sysDist// /}"
+
+  #echo "Detected operating system as $sysOS/$sysDist."
+}
+
+sysOS_detect
+
+function sysOS_isDebian {
+  if [ "${sysOS}" = "debian" ] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function sysOS_isDeb12 {
+  if sysOS_isDebian ; then
+    if  [ "${sysDist}" = "12" ] ; then
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
+function sysOS_isDeb11 {
+  if sysOS_isDebian ; then
+    if  [ "${sysDist}" = "11" ] ; then
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
 
 _CommentBegin_
 ####+BEGIN: bx:dblock:global:file-insert-cond :cond "./blee.el" :file "/libre/ByStar/InitialTemplates/software/plusOrg/dblock/inserts/topControls.org"
