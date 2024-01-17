@@ -907,8 +907,9 @@ function Plus_rightSide {
 
 ###
 
-#PATH=/usr/sbin:/usr/bin:/sbin
-
+[[ ":$PATH:" != *":/usr/sbin:"* ]] && PATH="/usr/sbin:${PATH}"
+[[ ":$PATH:" != *":/sbin:"* ]] && PATH="/sbin:${PATH}"
+[[ ":$PATH:" != *":/usr/bin:"* ]] && PATH="/usr/bin:${PATH}"
 [[ ":$PATH:" != *":/usr/local/bin:"* ]] && PATH="/usr/local/bin:${PATH}"
 [[ ":$PATH:" != *":.:"* ]] && PATH=".:${PATH}"
 
