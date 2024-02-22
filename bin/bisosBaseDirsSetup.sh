@@ -175,8 +175,8 @@ _EOF_
     # lpDo bx-platformInfoManage.py --rootDir_bxo="${bxoRootDir}"  -i pkgInfoParsSet
     # lpDo bx-platformInfoManage.py --rootDir_deRun="${deRunRootDir}"  -i pkgInfoParsSet    
 
-    ANT_raw "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
-    lpDo bx-platformInfoManage.py -i pkgInfoParsGet
+    # ANT_raw "========= bx-platformInfoManage.py -i pkgInfoParsGet ========="
+    # lpDo bx-platformInfoManage.py -i pkgInfoParsGet
 
     lpDo sudo mkdir "/var/bisos"
     lpDo sudo chown ${currentUser}:${currentUserGroup} "/var/bisos"
