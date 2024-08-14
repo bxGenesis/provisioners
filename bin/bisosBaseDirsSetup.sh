@@ -220,13 +220,34 @@ _EOF_
 
     local bisosRootDir=$1
 
+    local bxBasesProg=$HOME/.local/bin/bx-bases -v 30
+    
+    lpDo ${bxBasesProg} --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
+
+    lpDo ${bxBasesProg} --baseDir="${bisosRootDir}" --pbdName="bleeRoot" -i pbdUpdate all
+
+    lpDo ${bxBasesProg} --baseDir="${bxp_rootDir_deRun}" --pbdName="deRunRoot" -i pbdUpdate all
+
+    lpDo ${bxBasesProg} --baseDir="${bxp_rootDir_bxo}" --pbdName="bxoRoot" -i pbdUpdate all
+}
+
+function vis_bxBasesUpdateAll%% {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+echo someParam and args
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local bisosRootDir=$1
+
     local py3ActivateFile="${venvBasePy3}/bin/activate"
 
     source ${py3ActivateFile}
-    
+
     lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
 
-    lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bleeRoot" -i pbdUpdate all    
+    lpDo bx-bases -v 20 --baseDir="${bisosRootDir}" --pbdName="bleeRoot" -i pbdUpdate all
 
     lpDo bx-bases -v 20 --baseDir="${bxp_rootDir_deRun}" --pbdName="deRunRoot" -i pbdUpdate all
 
@@ -276,10 +297,28 @@ _EOF_
 
     local baseDir=$1
 
+    local bxGitReposBasesProg=$HOME/.local/bin/bx-gitReposBases -v 30
+
+    lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all
+    lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
+    lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode="anon"  -i pbdUpdate all
+}
+
+
+function vis_bxGitReposBasesAnon%% {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+Arg1 is expected to be something like /bisos/git/anon to which bxRepos and ext will be appended.
+_EOF_
+    }
+    EH_assert [[ $# -eq 1 ]]
+
+    local baseDir=$1
+
     # local py3ActivateFile="${venvBasePy3}/bin/activate"
 
     # source ${py3ActivateFile}
-    
+
     lpDo ${venvBasePy3}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all
     lpDo ${venvBasePy3}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
     lpDo ${venvBasePy3}/bin/bx-gitReposBases -v 20 --baseDir="${baseDir}/ext" --pbdName="extRepos" --vcMode="anon"  -i pbdUpdate all

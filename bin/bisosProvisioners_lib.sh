@@ -284,13 +284,30 @@ _EOF_
     # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosProvisionersVenvSetup.sh
     local bisosProg="${provisionersBinBase}/bisosProvisionersVenvSetup.sh"
 
+    lpDo "OBSOLETED -- NOT Runing ${bisosProg}" -h -v -n showRun -i fullUpdate
+
+    lpReturn
+}
+
+function vis_provisionersVenvPipInstalls%% {
+    G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    local provisionersBinBase="$( provisionersBinBaseGet )"
+
+    # /opt/bisosProvisioner/gitRepos/provisioners/bin/bisosProvisionersVenvSetup.sh
+    local bisosProg="${provisionersBinBase}/bisosProvisionersVenvSetup.sh"
+
     if [ ! -x "${bisosProg}" ] ; then
         EH_problem "Missing ${bisosProg}"
         lpReturn 1
-    else        
+    else
         opDo "${bisosProg}" -h -v -n showRun -i fullUpdate
     fi
-    
+
     lpReturn
 }
 

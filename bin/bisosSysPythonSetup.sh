@@ -286,6 +286,7 @@ _EOF_
 
     if sysOS_isDeb12 ; then
         lpDo pipx install bisos.platform
+        lpDo pipx install bisos.bx-bases
     elif sysOS_isDeb11 ; then
         lpDo sudo -H pip3 install --no-cache-dir --upgrade bisos.platform
     else
