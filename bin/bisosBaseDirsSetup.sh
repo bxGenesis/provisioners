@@ -209,6 +209,16 @@ _EOF_
     lpDo sudo -H -u ${currentUser} ${G_myFullName} -h -v -n showRun -i bxBasesUpdateAll "${bisosRootDir}"
 }
 
+function vis_provisionPipxBin_get {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo cat /tmp/bisosProvisionPipxBin
+}
+
 
 function vis_bxBasesUpdateAll {
     G_funcEntry
@@ -220,7 +230,8 @@ _EOF_
 
     local bisosRootDir=$1
 
-    local bxBasesProg=$HOME/.local/bin/bx-bases -v 30
+    local provisionPipxBin=$(vis_provisionPipxBin_get)
+    local bxBasesProg="${provisionPipxBin}/bx-bases -v 30"
     
     lpDo ${bxBasesProg} --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
 
@@ -297,7 +308,8 @@ _EOF_
 
     local baseDir=$1
 
-    local bxGitReposBasesProg=$HOME/.local/bin/bx-gitReposBases -v 30
+    local provisionPipxBin=$(vis_provisionPipxBin_get)
+    local bxBasesProg="${provisionPipxBin}/bx-gitReposBases -v 30"
 
     lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all
     lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all

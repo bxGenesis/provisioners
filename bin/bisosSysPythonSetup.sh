@@ -97,6 +97,7 @@ ${G_myName} ${extraInfo} -i sysInstall_pip3
 ${G_myName} ${extraInfo} -i sysInstall_pip2
 ${G_myName} ${extraInfo} -i sysPipInstall_virtualenv3
 ${G_myName} ${extraInfo} -i sysPipInstall_bisosPlatform
+${G_myName} ${extraInfo} -i provisionPipxBin_set
 _EOF_
 }
 
@@ -275,6 +276,17 @@ _EOF_
 }       
 
 
+function vis_provisionPipxBin_set {
+   G_funcEntry
+    function describeF {  G_funcEntryShow; cat  << _EOF_
+_EOF_
+    }
+    EH_assert [[ $# -eq 0 ]]
+
+    lpDo eval echo $HOME/.local/bin \> /tmp/bisosProvisionPipxBin
+}
+
+
 function vis_sysPipInstall_bisosPlatform {
    G_funcEntry
     function describeF {  G_funcEntryShow; cat  << _EOF_
@@ -287,6 +299,7 @@ _EOF_
     if sysOS_isDeb12 ; then
         lpDo pipx install bisos.platform
         lpDo pipx install bisos.bx-bases
+        lpDo vis_provisionPipxBin_set
     elif sysOS_isDeb11 ; then
         lpDo sudo -H pip3 install --no-cache-dir --upgrade bisos.platform
     else
