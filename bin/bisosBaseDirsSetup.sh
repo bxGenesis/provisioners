@@ -216,7 +216,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    lpDo cat /tmp/bisosProvisionPipxBin
+    cat /tmp/bisosProvisionPipxBin
 }
 
 
