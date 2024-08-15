@@ -230,7 +230,7 @@ _EOF_
 
     local bisosRootDir=$1
 
-    local provisionPipxBin=$(vis_provisionPipxBin_get)
+    local provisionPipxBin="/tmp/bisosPipx/bin"
     local bxBasesProg="${provisionPipxBin}/bx-bases -v 30"
     
     lpDo ${bxBasesProg} --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
@@ -308,7 +308,7 @@ _EOF_
 
     local baseDir=$1
 
-    local provisionPipxBin=$(vis_provisionPipxBin_get)
+    local provisionPipxBin="/tmp/bisosPipx/bin"
     local bxBasesProg="${provisionPipxBin}/bx-gitReposBases -v 30"
 
     lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all

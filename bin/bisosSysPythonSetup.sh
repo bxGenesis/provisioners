@@ -296,10 +296,14 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    local pipxBase="/tmp/bisosPipx"
+
     if sysOS_isDeb12 ; then
-        lpDo pipx install bisos.platform
-        lpDo pipx install bisos.bx-bases
-        lpDo vis_provisionPipxBin_set
+        lpDo mkdir ${pipxBase}
+        lpDo chmod 777 ${pipxBase}
+        lpDo env PIPX_HOME=${pipxBase} PIPX_BIN_DIR=${pipxBase}/bin pipx install bisos.platform
+        lpDo env PIPX_HOME=${pipxBase} PIPX_BIN_DIR=${pipxBase}/bin pipx install bisos.bx-bases
+        # lpDo vis_provisionPipxBin_set
     elif sysOS_isDeb11 ; then
         lpDo sudo -H pip3 install --no-cache-dir --upgrade bisos.platform
     else
