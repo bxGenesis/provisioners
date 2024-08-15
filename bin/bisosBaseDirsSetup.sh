@@ -309,7 +309,7 @@ _EOF_
     local baseDir=$1
 
     local provisionPipxBin="/tmp/bisosPipx/bin"
-    local bxBasesProg="${provisionPipxBin}/bx-gitReposBases -v 30"
+    local bxGitReposBasesProg="${provisionPipxBin}/bx-gitReposBases -v 30"
 
     lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}" --pbdName="bxReposCollection" --vcMode="anon"  -i pbdUpdate all
     lpDo ${bxGitReposBasesProg} --baseDir="${baseDir}/bxRepos" --pbdName="bxReposRoot" --vcMode="anon"  -i pbdUpdate all
