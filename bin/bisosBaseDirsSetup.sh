@@ -384,6 +384,7 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    opDo sudo apt-get install -y acl
     opDo sudo apt-get install -y python3
 
     lpReturn
