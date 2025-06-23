@@ -422,6 +422,18 @@ function sysOS_isDebian {
   fi
 }
 
+function sysOS_isDeb13 {
+  if sysOS_isDebian ; then
+    if  [ "${sysDist}" = "13" ] ; then
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
 function sysOS_isDeb12 {
   if sysOS_isDebian ; then
     if  [ "${sysDist}" = "12" ] ; then

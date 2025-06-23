@@ -176,6 +176,11 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
+    if sysOS_isDeb13 ; then
+        EH_problem "Obsolete invokation of  vis_sysInstall_python2 -- To Be Deleted"
+        lpReturn
+    fi
+
     if sysOS_isDeb12 ; then
         EH_problem "Obsolete invokation of  vis_sysInstall_python2 -- To Be Deleted"
         lpReturn
@@ -230,6 +235,11 @@ function vis_sysInstall_pip2 {
 _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
+
+    if sysOS_isDeb13 ; then
+        EH_problem "Obsolete invokation of  vis_sysInstall_pip2 -- To Be Deleted"
+        lpReturn
+    fi
 
     if sysOS_isDeb12 ; then
         EH_problem "Obsolete invokation of  vis_sysInstall_pip2 -- To Be Deleted"
@@ -298,7 +308,13 @@ _EOF_
 
     local pipxBase="/tmp/bisosPipx"
 
-    if sysOS_isDeb12 ; then
+    if sysOS_isDeb13 ; then
+        lpDo mkdir ${pipxBase}
+        lpDo chmod 777 ${pipxBase}
+        lpDo env PIPX_HOME=${pipxBase} PIPX_BIN_DIR=${pipxBase}/bin pipx install bisos.platform
+        lpDo env PIPX_HOME=${pipxBase} PIPX_BIN_DIR=${pipxBase}/bin pipx install bisos.bx-bases
+        # lpDo vis_provisionPipxBin_set
+    elif sysOS_isDeb12 ; then
         lpDo mkdir ${pipxBase}
         lpDo chmod 777 ${pipxBase}
         lpDo env PIPX_HOME=${pipxBase} PIPX_BIN_DIR=${pipxBase}/bin pipx install bisos.platform
