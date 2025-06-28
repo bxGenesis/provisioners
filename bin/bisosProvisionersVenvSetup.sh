@@ -132,6 +132,7 @@ _EOF_
     if [ -f "${py3ActivateFile}" ] ; then
         ANT_raw "${py3ActivateFile} Exists -- Py3 Venv creation skipped"
     else
+        lpDo sudo apt-get -y install python3-virtualenv
         lpDo virtualenv --python=python3 ${venvBasePy3} 
     fi
 

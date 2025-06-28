@@ -222,6 +222,8 @@ _EOF_
 
     local provisionPipxBin="/tmp/bisosPipx/bin"
     local bxBasesProg="${provisionPipxBin}/bx-bases -v 30"
+
+    lpDo sudo apt-get -y install python3-virtualenv
     
     lpDo ${bxBasesProg} --baseDir="${bisosRootDir}" --pbdName="bisosRoot" -i pbdUpdate all
 
