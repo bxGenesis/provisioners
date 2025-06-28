@@ -274,7 +274,9 @@ _EOF_
     }
     EH_assert [[ $# -eq 0 ]]
 
-    if sysOS_isDeb12 ; then
+    if sysOS_isDeb13 ; then
+        lpDo sudo apt-get -y install python3-virtualenv
+    elif sysOS_isDeb12 ; then
         lpDo sudo apt-get -y install python3-virtualenv
     elif sysOS_isDeb11 ; then
         lpDo sudo -H pip3 install --no-cache-dir --upgrade virtualenv
